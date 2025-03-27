@@ -12,9 +12,6 @@ const GameSetup: React.FC = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
   
-  // Calculăm numărul total de runde bazat pe numărul de jucători și tipul de joc
-  const totalRounds = calculateTotalRounds(playerNames.filter(Boolean).length, gameType);
-  
   // Validăm playerNames de fiecare dată când se schimbă
   useEffect(() => {
     // Verificăm dacă avem cel puțin 3 jucători cu nume completate

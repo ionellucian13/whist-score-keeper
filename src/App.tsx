@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { GameProvider, useGameContext } from './context/GameContext';
-import { GamePhase, GameType } from './models/types';
+import { GamePhase } from './models/types';
 import Header from './components/Header';
 import GameSetup from './components/GameSetup';
 import PredictionPhase from './components/PredictionPhase';

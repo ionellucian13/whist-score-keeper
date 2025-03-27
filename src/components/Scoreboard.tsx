@@ -62,26 +62,6 @@ const Scoreboard: React.FC = () => {
     return 'stable';
   };
   
-  // Formatarea scorului pentru afișare
-  const formatScore = (score: number | undefined, prediction?: number, tricksWon?: number): ReactElement => {
-    if (score === undefined) return <span>-</span>;
-    
-    // Dacă nu avem predicție sau tricks, afișăm doar scorul
-    if (prediction === undefined || tricksWon === undefined) {
-      return <span className={score >= 0 ? 'text-green-600' : 'text-red-600'}>{score}</span>;
-    }
-    
-    // Predicție corectă (verde), predicție greșită (roșu)
-    const isCorrectPrediction = prediction === tricksWon;
-    const colorClass = isCorrectPrediction ? 'text-green-600' : 'text-red-600';
-    
-    return (
-      <span className={colorClass}>
-        {score} <span className="text-xs">({prediction}/{tricksWon})</span>
-      </span>
-    );
-  };
-  
   // Obținem icon-ul pentru tendință
   const getTrendIcon = (trend: 'up' | 'down' | 'stable'): ReactElement => {
     switch (trend) {

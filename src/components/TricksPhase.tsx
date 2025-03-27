@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../context/GameContext';
 import { checkConsecutiveRounds } from '../utils/gameUtils';
 import { Player, Round } from '../models/types';
@@ -51,15 +51,6 @@ const TricksPhase: React.FC = () => {
     return totalTricksRecorded === currentRound.cardsPerPlayer;
   };
   
-  // Verificăm dacă numărul de mâini înregistrate este valid
-  const isValidTricksCount = (): boolean => {
-    if (!currentRound) return false;
-    
-    const totalTricksRecorded = Object.values(tricks).reduce((sum, val) => sum + val, 0);
-    
-    return totalTricksRecorded <= currentRound.cardsPerPlayer;
-  };
-
   // Funcția pentru verificarea bonusurilor de consecvență
   const checkConsecutiveBonuses = () => {
     if (!game || !currentRound) return;
@@ -122,7 +113,7 @@ const TricksPhase: React.FC = () => {
         setBonusMessages([]);
       }
     }
-  }, [tricks, game, currentRound]);
+  }, [tricks, game, currentRound, checkConsecutiveBonuses]);
 
   if (!game || !currentRound) {
     return <div>Loading...</div>;
