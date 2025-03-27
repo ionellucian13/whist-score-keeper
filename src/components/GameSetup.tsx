@@ -78,7 +78,7 @@ const GameSetup: React.FC = () => {
       case GameType.SHORT:
         return 'Joc scurt: 8 runde (mâini de la 1 la 8)';
       case GameType.MEDIUM:
-        return `Joc mediu: ${2 * validPlayers + 7} runde (rundă de 1 mână × ${validPlayers}, urcare 1-8, rundă de 8 mâini × ${validPlayers})`;
+        return `Joc mediu: ${2 * validPlayers + 7} runde (rundă de 1 mână × ${validPlayers}, urcare 2-8, rundă de 8 mâini × ${validPlayers})`;
       case GameType.LONG:
       default:
         return `Joc lung: ${3 * validPlayers + 12} runde (rundă de 1 mână × ${validPlayers}, urcare 2-7, rundă de 8 mâini × ${validPlayers}, coborâre 7-2, rundă de 1 mână × ${validPlayers})`;

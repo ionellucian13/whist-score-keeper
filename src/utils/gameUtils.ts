@@ -28,7 +28,11 @@ export const calculateTotalRounds = (numPlayers: number, gameType: GameType = Ga
       return 8;
       
     case GameType.MEDIUM:
-      // Joc mediu: Runde de 1 mână (n ori) + Runde crescătoare 2-8 + Runde de 8 mâini (n ori)
+      // Joc mediu: 
+      // 1. Runde de 1 mână (n ori, unde n = numărul de jucători)
+      // 2. Runde crescătoare de la 2 la 8 (7 runde)
+      // 3. Runde de 8 mâini (exact n ori, unde n = numărul de jucători)
+      // Total: n + 7 + n = 2n + 7 runde
       return numPlayers * 2 + 7; // 2n + 7
       
     case GameType.LONG:
@@ -53,7 +57,7 @@ export const calculateHandsPerPlayer = (roundNumber: number, numPlayers: number,
       
     case GameType.MEDIUM: {
       // Joc mediu
-      // Runde de 1 mână (n ori) + Runde crescătoare 1-8 + Runde de 8 mâini (n ori)
+      // Runde de 1 mână (n ori) + Runde crescătoare 2-8 + Runde de 8 mâini (n ori)
       
       // Prima secțiune - runde cu 1 mână (repetate de n ori)
       if (roundNumber <= numPlayers) {
@@ -66,6 +70,13 @@ export const calculateHandsPerPlayer = (roundNumber: number, numPlayers: number,
       }
       
       // A treia secțiune - runde cu 8 mâini (repetate de n ori)
+      // Verificăm dacă suntem în intervalul secțiunii a treia (maximum numPlayers runde)
+      if (roundNumber <= numPlayers + 7 + numPlayers) {
+        return 8;
+      }
+      
+      // Nu ar trebui să ajungem aici niciodată pentru jocul MEDIUM,
+      // dar avem un caz de rezervă pentru orice eventualitate
       return 8;
     }
       
