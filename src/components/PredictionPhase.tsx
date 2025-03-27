@@ -171,7 +171,7 @@ const PredictionPhase: React.FC = () => {
                 {getPossibleBets(player.id).map((betValue) => (
                   <button
                     key={betValue}
-                    className="bet-button w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all text-sm font-medium hover:scale-105 active:scale-95"
+                    className="bet-button w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all text-xs font-medium"
                     onClick={() => handlePredictionSelect(player.id, betValue)}
                   >
                     {betValue}
