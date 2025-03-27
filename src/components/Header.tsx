@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../context/GameContext';
 import { GamePhase, GameType } from '../models/types';
 import RulesModal from './RulesModal';
@@ -12,6 +12,25 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
   const { game, gamePhase, resetGame } = useGameContext();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Verifică preferința salvată sau preferința sistemului
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+  
+  // Aplică tema când se schimbă
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-theme');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-theme');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
   
   const handleResetClick = () => {
     setShowResetConfirm(true);
@@ -38,6 +57,11 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
   
   const closeRulesModal = () => {
     setShowRulesModal(false);
+  };
+  
+  // Toggle dark mode
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
   };
   
   // Determină textul pentru tipul de joc
@@ -79,7 +103,10 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
   return (
     <header className="app-header">
       <div className="header-content">
-        <h1>Whist Românesc</h1>
+        <h1 className="logo">
+          <span className="card-icon">♠♥♣♦</span>
+          Whist Românesc
+        </h1>
         
         {game && gamePhase !== GamePhase.SETUP && (
           <div className="game-info">
@@ -105,6 +132,22 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
       </div>
       
       <div className="header-actions">
+        <button 
+          onClick={toggleTheme} 
+          className="theme-toggle"
+          aria-label={darkMode ? 'Comută la tema luminoasă' : 'Comută la tema întunecată'}
+        >
+          {darkMode ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+          )}
+        </button>
+        
         <button onClick={openRulesModal} className="rules-button">
           Reguli
         </button>
@@ -118,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
       
       {showResetConfirm && (
         <div className="reset-confirm-overlay">
-          <div className="reset-confirm-modal">
+          <div className="reset-confirm-modal scale-in">
             <h3>Resetare Joc</h3>
             <p>Ești sigur că vrei să începi un joc nou? Toate datele curente vor fi pierdute.</p>
             <div className="reset-actions">

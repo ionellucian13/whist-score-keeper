@@ -38,8 +38,8 @@
 }
 
 :root {
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
   --primary-light: #eef2ff;
   --primary-dark: #3730a3;
   --secondary-color: #f59e0b;
@@ -84,6 +84,38 @@
   --transition-fast: 150ms;
   --transition-normal: 250ms;
   --transition-slow: 350ms;
+  
+  /* Card styles */
+  --card-bg: white;
+  --card-shadow: var(--shadow-md);
+  --card-hover-shadow: var(--shadow-lg);
+  
+  /* Dark mode colors - pentru implementare viitoare */
+  --dark-bg: #111827;
+  --dark-card-bg: #1f2937;
+  --dark-text: #f9fafb;
+  --dark-text-secondary: #9ca3af;
+  --dark-border: #374151;
+}
+
+/* Adăugăm suport pentru dark mode preferat de sistem */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #818cf8;
+    --primary-hover: #6366f1;
+    --primary-light: #1e1b4b;
+    --primary-dark: #c7d2fe;
+  }
+  
+  body.dark-theme {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+  }
+  
+  body.dark-theme .card {
+    background-color: var(--dark-card-bg);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
 }
 
 body {
@@ -128,16 +160,46 @@ body {
   border-radius: var(--radius-md);
   transition: all var(--transition-normal);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.btn:active::after {
+  opacity: 0.3;
+  transform: scale(20, 20) translate(-50%, -50%);
+  transition: transform 0.5s, opacity 1s;
 }
 
 .btn-primary {
   background-color: var(--primary-color);
   color: white;
   border: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:disabled {
@@ -377,4 +439,43 @@ p {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--neutral-400);
+}
+
+/* Animații și tranziții îmbunătățite */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.4s ease forwards;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease forwards;
+}
+
+/* Animație pentru notificări sau scoruri actualizate */
+.animate-highlight {
+  animation: highlight 1s ease-in-out;
+}
+
+@keyframes highlight {
+  0% { background-color: rgba(99, 102, 241, 0); }
+  50% { background-color: rgba(99, 102, 241, 0.2); }
+  100% { background-color: rgba(99, 102, 241, 0); }
 }

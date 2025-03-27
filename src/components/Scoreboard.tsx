@@ -79,48 +79,86 @@ const Scoreboard: React.FC = () => {
   }
   
   return (
-    <div className="mt-8 bg-white rounded-lg shadow-md p-4">
+    <div className="mt-8 bg-white rounded-lg shadow-md p-4 fade-in">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Scoreboard</h2>
+        <h2 className="text-xl font-bold text-gray-800 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Scoreboard
+        </h2>
         
         <button
           onClick={() => setShowLegend(!showLegend)}
-          className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
+          className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline flex items-center"
         >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
           {showLegend ? 'Ascunde legenda' : 'Arată legenda'}
         </button>
       </div>
       
       {showLegend && (
-        <div className="bg-gray-50 p-3 rounded-md mb-4 text-sm">
-          <p className="font-medium mb-1">Legendă format scor:</p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li><span className="text-green-600">10</span> = Predicție corectă (5 puncte + numărul de mâini câștigate)</li>
-            <li><span className="text-red-600">-2</span> = Predicție incorectă (0 - diferența absolută între predicție și mâini câștigate)</li>
-            <li><span className="font-mono">3/2</span> = Format: Predicție/Mâini câștigate</li>
-            <li><span className="text-purple-600">+5/-5</span> = Bonus/penalizare pentru 5 runde consecutive corecte/greșite</li>
+        <div className="bg-indigo-50 p-3 rounded-md mb-5 text-sm border border-indigo-100 scale-in">
+          <p className="font-medium mb-2 text-indigo-800">Legendă format scor:</p>
+          <ul className="list-disc pl-5 space-y-1.5 text-indigo-700">
+            <li><span className="text-green-600 font-medium">10</span> = Predicție corectă (5 puncte + numărul de mâini câștigate)</li>
+            <li><span className="text-red-600 font-medium">-2</span> = Predicție incorectă (0 - diferența absolută între predicție și mâini câștigate)</li>
+            <li><span className="font-mono bg-gray-100 px-1 py-0.5 rounded">3/2</span> = Format: Predicție/Mâini câștigate</li>
+            <li><span className="text-purple-600 font-medium">+5/-5</span> = Bonus/penalizare pentru 5 runde consecutive corecte/greșite</li>
           </ul>
         </div>
       )}
       
       {/* Clasament rapid */}
-      <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
         {playerScores.slice(0, 4).map(({player, score}, index) => {
           const trend = getPlayerTrend(player.id);
           return (
-            <div key={player.id} className={`flex items-center p-2 rounded-md border ${index === 0 ? 'bg-yellow-50 border-yellow-200' : 'bg-gray-50 border-gray-200'}`}>
-              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 font-bold text-gray-700">
+            <div 
+              key={player.id} 
+              className={`flex items-center p-3 rounded-lg border ${
+                index === 0 
+                  ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200 shadow-sm' 
+                  : index === 1
+                    ? 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200'
+                    : index === 2
+                      ? 'bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200'
+                      : 'bg-gray-50 border-gray-200'
+              } transition-all hover:shadow-md`}
+            >
+              <div className="w-10 h-10 flex items-center justify-center rounded-full font-bold text-white mr-3 shadow-sm" style={{ 
+                backgroundColor: index === 0 
+                  ? '#FFD700' 
+                  : index === 1
+                    ? '#C0C0C0'
+                    : index === 2
+                      ? '#CD7F32'
+                      : '#718096' 
+              }}>
                 {index + 1}
               </div>
-              <div 
-                className="w-3 h-3 rounded-full ml-2" 
-                style={{ backgroundColor: player.color }}
-              ></div>
-              <div className="ml-2 flex-grow">
-                <div className="font-medium">{player.name}</div>
-              </div>
-              <div className="font-bold text-lg">
-                {score} {getTrendIcon(trend)}
+              <div className="flex flex-col flex-grow">
+                <div className="flex items-center">
+                  <div 
+                    className="w-3 h-3 rounded-full mr-2" 
+                    style={{ backgroundColor: player.color }}
+                  ></div>
+                  <div className="font-medium truncate">{player.name}</div>
+                </div>
+                <div className="flex items-center mt-1">
+                  <span className="font-bold text-lg mr-1">{score}</span> 
+                  <span className={`text-sm ${
+                    trend === 'up' 
+                      ? 'text-green-500' 
+                      : trend === 'down' 
+                        ? 'text-red-500' 
+                        : 'text-gray-500'
+                  }`}>
+                    {getTrendIcon(trend)}
+                  </span>
+                </div>
               </div>
             </div>
           );
@@ -128,20 +166,20 @@ const Scoreboard: React.FC = () => {
       </div>
       
       {/* Tabel complet cu scorurile */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
         <table className="min-w-full bg-white text-sm">
           <thead>
-            <tr className="bg-gray-100 border-b">
-              <th className="sticky left-0 bg-gray-100 p-2 text-left">Jucător</th>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="sticky left-0 bg-gray-50 p-3 text-left font-semibold text-gray-600">Jucător</th>
               {Array.from({ length: totalRounds }, (_, i) => i + 1).map(roundNumber => (
-                <th key={roundNumber} className="p-2 text-center whitespace-nowrap">
+                <th key={roundNumber} className="p-2 text-center whitespace-nowrap font-semibold text-gray-600">
                   R{roundNumber}
                   <div className="text-xs text-gray-500">
                     ({getCardsForRound(roundNumber)} mâini)
                   </div>
                 </th>
               ))}
-              <th className="sticky right-0 bg-gray-100 p-2 text-center">Total</th>
+              <th className="sticky right-0 bg-gray-50 p-3 text-center font-semibold text-gray-600">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -150,10 +188,10 @@ const Scoreboard: React.FC = () => {
               const trend = getPlayerTrend(player.id);
               
               return (
-                <tr key={player.id} className="border-b hover:bg-gray-50">
-                  <td className="sticky left-0 bg-white p-2 font-medium whitespace-nowrap">
+                <tr key={player.id} className="border-b hover:bg-gray-50 transition-colors">
+                  <td className="sticky left-0 bg-white p-3 font-medium whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 font-bold text-gray-700 mr-2">
+                      <div className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 font-bold text-gray-700 mr-2 border">
                         {playerRank}
                       </div>
                       <div 
@@ -161,7 +199,15 @@ const Scoreboard: React.FC = () => {
                         style={{ backgroundColor: player.color }}
                       ></div>
                       <span>{player.name}</span>
-                      <span className="ml-1">{getTrendIcon(trend)}</span>
+                      <span className={`ml-1 ${
+                        trend === 'up' 
+                          ? 'text-green-500' 
+                          : trend === 'down' 
+                            ? 'text-red-500' 
+                            : 'text-gray-500'
+                      }`}>
+                        {getTrendIcon(trend)}
+                      </span>
                     </div>
                   </td>
                   
@@ -181,18 +227,18 @@ const Scoreboard: React.FC = () => {
                     return (
                       <td 
                         key={roundNumber} 
-                        className="p-2 text-center"
+                        className={`p-2 text-center ${roundNumber === game.currentRound - 1 ? 'animate-highlight' : ''}`}
                       >
                         {playerResult ? (
-                          <span className={scoreClass}>{displayText}</span>
+                          <span className={`${scoreClass} font-medium`}>{displayText}</span>
                         ) : (
-                          <span>-</span>
+                          <span className="text-gray-400">-</span>
                         )}
                       </td>
                     );
                   })}
                   
-                  <td className="sticky right-0 bg-white p-2 text-center font-bold">
+                  <td className="sticky right-0 bg-white p-3 text-center font-bold">
                     {playerScores.find(ps => ps.player.id === player.id)?.score || 0}
                   </td>
                 </tr>

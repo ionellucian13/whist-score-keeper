@@ -11,6 +11,12 @@
   transition: all 0.3s ease;
 }
 
+body.dark-theme .app-header {
+  background-color: var(--dark-card-bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  color: var(--dark-text);
+}
+
 .app-header:after {
   content: '';
   position: absolute;
@@ -28,22 +34,51 @@
   gap: 2rem;
 }
 
-.header-content h1 {
+.header-content h1.logo {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--primary-color);
   position: relative;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+body.dark-theme .header-content h1.logo {
+  color: var(--primary-light);
+}
+
+.header-content h1.logo .card-icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
 }
 
 .header-content h1:after {
-  content: '♠️♥️♣️♦️';
-  font-size: 0.75rem;
+  content: '';
+  height: 3px;
+  width: 0;
+  background: var(--primary-color);
   position: absolute;
-  bottom: -0.75rem;
+  bottom: -0.5rem;
   left: 0;
-  white-space: nowrap;
-  opacity: 0.7;
+  transition: width 0.3s ease;
+}
+
+.header-content h1:hover:after {
+  width: 100%;
+}
+
+body.dark-theme .header-content h1:after {
+  background: var(--primary-light);
 }
 
 .game-info {
@@ -58,12 +93,20 @@
   font-weight: 500;
 }
 
+body.dark-theme .game-type {
+  color: var(--dark-text-secondary);
+}
+
 .round-info {
   font-size: 0.75rem;
   color: var(--neutral-500);
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+body.dark-theme .round-info {
+  color: var(--dark-text-secondary);
 }
 
 .round-info span {
@@ -80,16 +123,51 @@
   display: inline-block;
 }
 
+body.dark-theme .round-progress {
+  background-color: var(--dark-border);
+}
+
 .round-progress-bar {
   height: 100%;
   background-color: var(--primary-color);
   border-radius: 9999px;
+  transition: width 0.3s ease-out;
 }
 
 .header-actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+}
+
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--neutral-100);
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-700);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--neutral-200);
+  transform: rotate(15deg);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+body.dark-theme .theme-toggle {
+  background-color: var(--dark-border);
+  border-color: var(--dark-text-secondary);
+  color: var(--dark-text);
 }
 
 .rules-button, .reset-button {
@@ -110,9 +188,26 @@
   color: var(--primary-color);
 }
 
+body.dark-theme .rules-button {
+  background-color: var(--primary-dark);
+  color: var(--dark-bg);
+}
+
 .rules-button:hover {
   background-color: var(--primary-color);
   color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rules-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+body.dark-theme .rules-button:hover {
+  background-color: var(--primary-light);
+  color: var(--dark-bg);
 }
 
 .reset-button {
