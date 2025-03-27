@@ -132,8 +132,8 @@ const GameSetup: React.FC = () => {
           
           {playerNames.map((name, index) => (
             <div key={index} className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: DEFAULT_GAME_SETTINGS.playerColors[index % DEFAULT_GAME_SETTINGS.playerColors.length] }}>
-                {index + 1}
+              <div className="player-indicator w-8 h-8 rounded-full" style={{ backgroundColor: DEFAULT_GAME_SETTINGS.playerColors[index % DEFAULT_GAME_SETTINGS.playerColors.length] }}>
+                <span className="font-bold text-white">{index + 1}</span>
               </div>
               <input
                 type="text"

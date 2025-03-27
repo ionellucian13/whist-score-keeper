@@ -654,74 +654,47 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
   overflow: hidden !important;
 }
 
-/* Fixarea specifică pentru bulinele cu numerele jucătorilor */
+/* Fixarea specifică pentru bulinele cu numerele jucătorilor - folosim o abordare pentru iOS */
 .w-8.h-8.rounded-full,
 .w-10.h-10.rounded-full,
 .w-12.h-12.rounded-full,
 .w-14.h-14.rounded-full,
 .w-16.h-16.rounded-full,
 .w-20.h-20.rounded-full,
-div[class*="w-"][class*="h-"][class*="rounded-full"],
-div[class*="rounded-full"][class*="flex"][class*="items-center"][class*="justify-center"] {
+[class*="rounded-full"].flex.items-center.justify-center,
+[class*="player-"] [class*="rounded-full"],
+[class*="w-"][class*="h-"][class*="rounded-full"] {
+  position: relative !important;
+  width: var(--circle-size, 100%) !important;
+  height: 0 !important;
+  padding-top: var(--circle-size, 100%) !important;
+  display: inline-block !important;
+}
+
+/* Conținutul cercurilor */
+.w-8.h-8.rounded-full > *,
+.w-10.h-10.rounded-full > *,
+.w-12.h-12.rounded-full > *,
+.w-14.h-14.rounded-full > *,
+.w-16.h-16.rounded-full > *,
+.w-20.h-20.rounded-full > *,
+[class*="rounded-full"].flex.items-center.justify-center > *,
+[class*="player-"] [class*="rounded-full"] > *,
+[class*="w-"][class*="h-"][class*="rounded-full"] > * {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  aspect-ratio: 1 / 1 !important;
-  border-radius: 50% !important;
-  transform: translateZ(0) !important; /* Forțează hardware acceleration */
-  will-change: transform !important; /* Optimizează randarea */
-  height: auto !important; /* Previne stretch-uirea */
-  box-sizing: border-box !important;
 }
 
-/* Asigurăm că dimensiunile fixe se păstrează indiferent de context */
-@supports (aspect-ratio: 1) {
-  [class*="rounded-full"] {
-    aspect-ratio: 1 / 1;
-    height: auto;
-    width: var(--circle-size, auto);
-  }
-
-  .w-8.h-8.rounded-full {
-    --circle-size: 2rem;
-  }
-  .w-10.h-10.rounded-full {
-    --circle-size: 2.5rem;
-  }
-  .w-12.h-12.rounded-full {
-    --circle-size: 3rem;
-  }
-  .w-14.h-14.rounded-full {
-    --circle-size: 3.5rem;
-  }
-  .w-16.h-16.rounded-full {
-    --circle-size: 4rem;
-  }
-  .w-20.h-20.rounded-full {
-    --circle-size: 5rem;
-  }
-}
-
-/* Previne comportamentul responsive care deformează bulinele */
-@media screen and (max-width: 640px) {
-  [class*="rounded-full"] {
-    max-height: none !important;
-    max-width: none !important;
-    transform: translateZ(0) !important;
-    position: relative !important;
-  }
-
-  /* Soluție pentru toate platformele */
-  div[class*="rounded-full"] {
-    height: 0 !important;
-    padding-bottom: 100% !important;
-    width: var(--circle-size, 2rem) !important;
-  }
-
-  div[class*="rounded-full"] > * {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-  }
-}
+/* Dimensiuni specifice */
+.w-8.h-8.rounded-full { --circle-size: 2rem; }
+.w-10.h-10.rounded-full { --circle-size: 2.5rem; }
+.w-12.h-12.rounded-full { --circle-size: 3rem; }
+.w-14.h-14.rounded-full { --circle-size: 3.5rem; }
+.w-16.h-16.rounded-full { --circle-size: 4rem; }
+.w-20.h-20.rounded-full { --circle-size: 5rem; }
