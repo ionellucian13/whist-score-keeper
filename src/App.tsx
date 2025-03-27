@@ -17,9 +17,11 @@ const GameContent: React.FC = () => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       // Import dinamic pentru a evita dependența directă
-      const { _testGameStructure } = require('./utils/gameUtils');
+      const { _testGameStructure, _testMediumGame } = require('./utils/gameUtils');
       // Testează funcțiile pentru fiecare tip de joc și afișează în consolă
       _testGameStructure();
+      // Testează specific jocul mediu pentru a verifica numărul corect de runde cu 8 mâini
+      _testMediumGame();
     }
   }, []);
 

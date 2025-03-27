@@ -70,14 +70,14 @@ export const calculateHandsPerPlayer = (roundNumber: number, numPlayers: number,
       }
       
       // A treia secțiune - runde cu 8 mâini (repetate de n ori)
-      // Verificăm dacă suntem în intervalul secțiunii a treia (maximum numPlayers runde)
-      if (roundNumber <= numPlayers + 7 + numPlayers) {
+      // Corectăm problema cu runda în plus prin reducerea cu 1 a limitei superioare
+      if (roundNumber <= numPlayers * 2 + 6) {
         return 8;
       }
       
       // Nu ar trebui să ajungem aici niciodată pentru jocul MEDIUM,
       // dar avem un caz de rezervă pentru orice eventualitate
-      return 8;
+      return 1;
     }
       
     case GameType.LONG:
@@ -373,4 +373,42 @@ export const saveRoundAndAdvance = (
   };
   
   return updatedGame;
+};
+
+// Funcție de test specifică pentru jocul MEDIUM
+export const _testMediumGame = () => {
+  console.group("TEST SPECIFIC JOC MEDIU");
+  
+  // Testează pentru fiecare număr posibil de jucători (3-6)
+  for (let players = 3; players <= 6; players++) {
+    console.group(`Cu ${players} jucători:`);
+    
+    console.log(`Total runde: ${calculateTotalRounds(players, GameType.MEDIUM)}`);
+    
+    // Contorizăm tipurile de runde
+    let roundsWith1Card = 0;
+    let roundsWithIncreasing = 0;
+    let roundsWith8Cards = 0;
+    
+    // Parcurgem toate rundele și verificăm tipul fiecăreia
+    for (let i = 1; i <= calculateTotalRounds(players, GameType.MEDIUM); i++) {
+      const cardsInRound = calculateHandsPerPlayer(i, players, GameType.MEDIUM);
+      console.log(`Runda ${i}: ${cardsInRound} mâini`);
+      
+      if (cardsInRound === 1) {
+        roundsWith1Card++;
+      } else if (cardsInRound === 8) {
+        roundsWith8Cards++;
+      } else {
+        roundsWithIncreasing++;
+      }
+    }
+    
+    console.log(`Sumar: ${roundsWith1Card} runde cu 1 mână, ${roundsWithIncreasing} runde crescătoare, ${roundsWith8Cards} runde cu 8 mâini`);
+    console.log(`Verificare: Runde cu 8 mâini = număr jucători? ${roundsWith8Cards === players ? 'DA' : 'NU - EROARE'}`);
+    
+    console.groupEnd();
+  }
+  
+  console.groupEnd();
 }; 
