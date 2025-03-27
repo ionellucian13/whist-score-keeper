@@ -1,249 +1,131 @@
-import React, { useState, useEffect } from 'react';
-import { useGameContext } from '../context/GameContext';
-import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+import React from 'react';
+import { GameType, Player, PlayerStatistics } from '../types';
+import { calculateFinalStandings } from '../utils/gameUtils';
 
-interface PlayerRanking {
-  id: string;
-  name: string;
-  color: string;
-  score: number;
-  rank: number;
+interface GameCompleteProps {
+  players: Player[];
+  onContinueWithSamePlayers: () => void;
+  onStartNewGame: () => void;
+  onSelectGameType: (type: GameType) => void;
+  playerStats: Record<string, PlayerStatistics>;
 }
 
-const GameComplete: React.FC = () => {
-  const { game, resetGame } = useGameContext();
-  const [rankings, setRankings] = useState<PlayerRanking[]>([]);
-  const [showConfetti, setShowConfetti] = useState(true);
-  const { width, height } = useWindowSize();
-  
-  useEffect(() => {
-    if (game) {
-      // Calculează scorul final pentru fiecare jucător
-      const playerRankings: PlayerRanking[] = game.players.map(player => {
-        // Obține toate rezultatele pentru acest jucător
-        const playerResults = game.rounds.flatMap(round => 
-          round.results.filter(result => result.playerId === player.id)
-        );
-        
-        // Calculează scorul total
-        const totalScore = playerResults.reduce((sum, result) => sum + result.score, 0);
-        
-        return {
-          id: player.id,
-          name: player.name,
-          color: player.color,
-          score: totalScore,
-          rank: 0 // vom calcula asta după sortare
-        };
-      });
-      
-      // Sortează jucătorii după scor (descrescător)
-      playerRankings.sort((a, b) => b.score - a.score);
-      
-      // Atribuie ranguri (ținând cont de scoruri egale)
-      let currentRank = 1;
-      let previousScore = playerRankings[0]?.score;
-      
-      playerRankings.forEach((player, index) => {
-        if (index > 0 && player.score < previousScore) {
-          currentRank = index + 1;
-        }
-        player.rank = currentRank;
-        previousScore = player.score;
-      });
-      
-      setRankings(playerRankings);
-      
-      // Oprește confetti după 5 secunde
-      const timer = setTimeout(() => {
-        setShowConfetti(false);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [game]);
-  
-  const handlePlayAgain = () => {
-    resetGame();
+export const GameComplete: React.FC<GameCompleteProps> = ({
+  players,
+  onContinueWithSamePlayers,
+  onStartNewGame,
+  onSelectGameType,
+  playerStats,
+}) => {
+  const [showGameTypes, setShowGameTypes] = React.useState(false);
+  const [selectedContinuation, setSelectedContinuation] = React.useState<'same_players' | 'new_players' | null>(null);
+
+  const sortedPlayers = React.useMemo(() => {
+    return calculateFinalStandings(players);
+  }, [players]);
+
+  const handleContinuationChoice = (choice: 'same_players' | 'new_players') => {
+    setSelectedContinuation(choice);
+    setShowGameTypes(true);
   };
-  
-  const handleShare = () => {
-    if (!game) return;
-    
-    try {
-      // Creează textul pentru partajare
-      const shareText = `Rezultate Whist:\n${rankings.map(player => 
-        `${player.rank}. ${player.name}: ${player.score} puncte`
-      ).join('\n')}`;
-      
-      // Verifică dacă API-ul de partajare este disponibil
-      if (navigator.share) {
-        navigator.share({
-          title: 'Rezultate Whist',
-          text: shareText
-        });
-      } else {
-        // Copia în clipboard ca alternativă
-        navigator.clipboard.writeText(shareText);
-        alert('Rezultatele au fost copiate în clipboard!');
-      }
-    } catch (error) {
-      console.error('Eroare la partajare:', error);
+
+  const handleGameTypeSelection = (type: GameType) => {
+    onSelectGameType(type);
+    if (selectedContinuation === 'same_players') {
+      onContinueWithSamePlayers();
+    } else {
+      onStartNewGame();
     }
   };
-  
-  if (!game) {
-    return null;
-  }
-  
-  const winner = rankings[0];
-  
+
   return (
-    <div className="card max-w-lg mx-auto p-6">
-      {showConfetti && <Confetti width={width} height={height} recycle={true} numberOfPieces={150} />}
-      
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold mb-2">Joc Terminat!</h1>
-        {winner && (
-          <p className="text-lg">
-            Câștigător: <span className="font-bold" style={{ color: winner.color }}>{winner.name}</span> cu {winner.score} puncte!
-          </p>
-        )}
-      </div>
-      
-      <div className="winners-podium mb-8">
-        <div className="flex justify-center items-end h-48 px-4">
-          {/* Locul 2 */}
-          {rankings.length > 1 && (
-            <div className="podium-place" style={{ width: '30%', marginRight: '2%' }}>
-              <div className="h-24 rounded-t-lg bg-gray-200 flex items-center justify-center relative">
-                <div 
-                  className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md"
-                  style={{ backgroundColor: rankings[1].color }}
-                >
-                  2
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg p-6 max-w-lg w-full">
+        <h2 className="text-2xl font-bold text-center mb-6">Final de joc</h2>
+        
+        {/* Clasament final */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4">Clasament final:</h3>
+          <div className="space-y-2">
+            {sortedPlayers.map((player, index) => (
+              <div key={player.id} className="flex justify-between items-center bg-gray-50 p-3 rounded">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">{index + 1}.</span>
+                  <span>{player.name}</span>
                 </div>
-                <div className="text-center">
-                  <div className="font-bold truncate px-2">{rankings[1].name}</div>
-                  <div>{rankings[1].score} pct</div>
+                <div className="flex gap-4">
+                  <span className="font-semibold">{player.score} puncte</span>
+                  {playerStats[player.id] && (
+                    <span className="text-gray-600">
+                      Media: {playerStats[player.id].averageScore.toFixed(1)}
+                    </span>
+                  )}
                 </div>
               </div>
-            </div>
-          )}
-          
-          {/* Locul 1 */}
-          {rankings.length > 0 && (
-            <div className="podium-place" style={{ width: '34%', marginRight: '2%', marginLeft: '2%' }}>
-              <div className="h-36 rounded-t-lg bg-yellow-200 flex items-center justify-center relative">
-                <div 
-                  className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md"
-                  style={{ backgroundColor: rankings[0].color }}
-                >
-                  1
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold truncate px-2">{rankings[0].name}</div>
-                  <div className="text-lg">{rankings[0].score} pct</div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Locul 3 */}
-          {rankings.length > 2 && (
-            <div className="podium-place" style={{ width: '30%' }}>
-              <div className="h-16 rounded-t-lg bg-gray-200 flex items-center justify-center relative">
-                <div 
-                  className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md"
-                  style={{ backgroundColor: rankings[2].color }}
-                >
-                  3
-                </div>
-                <div className="text-center">
-                  <div className="font-bold truncate px-2">{rankings[2].name}</div>
-                  <div>{rankings[2].score} pct</div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      <div className="results-table mb-8">
-        <h2 className="text-lg font-semibold mb-4">Clasament Final</h2>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b">
-              <th className="pb-2 text-left">Loc</th>
-              <th className="pb-2 text-left">Jucător</th>
-              <th className="pb-2 text-right">Puncte</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rankings.map((player, index) => (
-              <tr 
-                key={player.id} 
-                className={`border-b ${index < 3 ? 'font-medium' : ''}`}
-              >
-                <td className="py-3">
-                  <div 
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                      player.rank === 1 ? 'bg-yellow-400' : 
-                      player.rank === 2 ? 'bg-gray-400' : 
-                      player.rank === 3 ? 'bg-amber-700' : 
-                      'bg-gray-200 text-gray-700'
-                    }`}
-                  >
-                    {player.rank}
-                  </div>
-                </td>
-                <td className="py-3">
-                  <div className="flex items-center">
-                    <div 
-                      className="w-4 h-4 rounded-full mr-2"
-                      style={{ backgroundColor: player.color }}
-                    ></div>
-                    <span>{player.name}</span>
-                  </div>
-                </td>
-                <td className="py-3 text-right font-semibold">
-                  {player.score}
-                </td>
-              </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
-      
-      <div className="action-buttons space-y-3">
-        <button
-          onClick={handlePlayAgain}
-          className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
-        >
-          Joc Nou
-        </button>
-        
-        <button
-          onClick={handleShare}
-          className="w-full p-3 border border-indigo-500 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium flex items-center justify-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-          </svg>
-          Partajează Rezultatele
-        </button>
-        
-        <div className="text-center text-gray-500 text-sm mt-4">
-          Mulțumim că ai jucat Whist Score Keeper!
+          </div>
         </div>
+
+        {/* Statistici jucători */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4">Statistici generale:</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {sortedPlayers.map((player) => {
+              const stats = playerStats[player.id];
+              return (
+                <div key={player.id} className="bg-gray-50 p-3 rounded">
+                  <h4 className="font-semibold">{player.name}</h4>
+                  <div className="text-sm">
+                    <p>Jocuri totale: {stats?.totalGames || 1}</p>
+                    <p>Victorii: {stats?.wins || 0}</p>
+                    <p>Scor mediu: {stats?.averageScore.toFixed(1) || player.score}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Opțiuni de continuare */}
+        {!showGameTypes ? (
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={() => handleContinuationChoice('same_players')}
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+            >
+              Joc nou cu aceiași jucători
+            </button>
+            <button
+              onClick={() => handleContinuationChoice('new_players')}
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
+            >
+              Joc nou cu alți jucători
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <h3 className="text-xl font-semibold">Alege tipul de joc:</h3>
+            <button
+              onClick={() => handleGameTypeSelection('SHORT')}
+              className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
+            >
+              Joc Scurt
+            </button>
+            <button
+              onClick={() => handleGameTypeSelection('MEDIUM')}
+              className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
+            >
+              Joc Mediu
+            </button>
+            <button
+              onClick={() => handleGameTypeSelection('LONG')}
+              className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
+            >
+              Joc Lung
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
-};
-
-export default GameComplete; 
+}; 

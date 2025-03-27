@@ -1,58 +1,49 @@
-import React, { useEffect } from 'react';
-import { GameProvider, useGameContext } from './context/GameContext';
-import { GamePhase } from './models/types';
-import Header from './components/Header';
-import GameSetup from './components/GameSetup';
-import PredictionPhase from './components/PredictionPhase';
-import TricksPhase from './components/TricksPhase';
-import GameComplete from './components/GameComplete';
-import Scoreboard from './components/Scoreboard';
-import RulesModal from './components/RulesModal';
-import './App.css';
+import React from 'react';
+import { GameSetup } from './components/GameSetup';
+import { Scoreboard } from './components/Scoreboard';
+import { GameComplete } from './components/GameComplete';
+import { useGame } from './context/GameContext';
 
-const GameContent: React.FC = () => {
-  const { gamePhase } = useGameContext();
-  
-  // Testează și afișează structura jocului în consolă (pentru dezvoltare)
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      // Import dinamic pentru a evita dependența directă
-      const { _testGameStructure, _testMediumGame } = require('./utils/gameUtils');
-      // Testează funcțiile pentru fiecare tip de joc și afișează în consolă
-      _testGameStructure();
-      // Testează specific jocul mediu pentru a verifica numărul corect de runde cu 8 mâini
-      _testMediumGame();
-    }
-  }, []);
+function App() {
+  const {
+    players,
+    gameType,
+    isGameComplete,
+    playerStats,
+    resetGame,
+    continueWithSamePlayers,
+    handleGameTypeSelection,
+  } = useGame();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {gamePhase === GamePhase.SETUP && <GameSetup />}
-      {gamePhase === GamePhase.PREDICTION && <PredictionPhase />}
-      {gamePhase === GamePhase.TRICKS && <TricksPhase />}
-      {gamePhase === GamePhase.COMPLETE && <GameComplete />}
-      
-      {/* Afișăm Scoreboard pe toate paginile, dar doar dacă nu suntem în faza de setup */}
-      {gamePhase !== GamePhase.SETUP && <Scoreboard />}
+    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+      <div className="relative py-3 sm:max-w-xl sm:mx-auto w-full px-4">
+        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+          <div className="max-w-md mx-auto">
+            <div className="divide-y divide-gray-200">
+              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                {!players.length || !gameType ? (
+                  <GameSetup />
+                ) : (
+                  <Scoreboard />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {isGameComplete && (
+        <GameComplete
+          players={players}
+          onContinueWithSamePlayers={continueWithSamePlayers}
+          onStartNewGame={resetGame}
+          onSelectGameType={handleGameTypeSelection}
+          playerStats={playerStats}
+        />
+      )}
     </div>
   );
-};
+}
 
-const App: React.FC = () => {
-  const [showRulesModal, setShowRulesModal] = React.useState(false);
-  
-  const openRulesModal = () => setShowRulesModal(true);
-  const closeRulesModal = () => setShowRulesModal(false);
-
-  return (
-    <GameProvider>
-      <div className="min-h-screen bg-gray-100">
-        <Header onOpenRules={openRulesModal} />
-        <GameContent />
-        <RulesModal isOpen={showRulesModal} onClose={closeRulesModal} />
-      </div>
-    </GameProvider>
-  );
-};
-
-export default App;
+export default App; 
