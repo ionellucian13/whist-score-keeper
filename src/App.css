@@ -645,16 +645,9 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
 
-/* Asigurăm că bulinele colorate rămân perfect rotunde pe toate dispozitivele */
+/* Soluție robustă pentru bulinele/cercurile rotunde pe toate dispozitivele */
+.rounded-full,
 [class*="rounded-full"],
-[class*="rounded-full"]::before,
-[class*="rounded-full"]::after {
-  aspect-ratio: 1 / 1 !important;
-  border-radius: 50% !important;
-  overflow: hidden !important;
-}
-
-/* Fixarea specifică pentru bulinele cu numerele jucătorilor - folosim o abordare pentru iOS */
 .w-4.h-4.rounded-full,
 .w-8.h-8.rounded-full,
 .w-10.h-10.rounded-full,
@@ -662,32 +655,21 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
 .w-14.h-14.rounded-full,
 .w-16.h-16.rounded-full,
 .w-20.h-20.rounded-full,
-[class*="rounded-full"].flex.items-center.justify-center,
 [class*="player-"] [class*="rounded-full"],
-[class*="w-"][class*="h-"][class*="rounded-full"] {
+.player-indicator {
   position: relative !important;
-  width: var(--circle-size, 100%) !important;
-  height: 0 !important;
-  padding-top: var(--circle-size, 100%) !important;
-  display: inline-block !important;
-}
-
-/* Conținutul cercurilor */
-.w-4.h-4.rounded-full > *,
-.w-8.h-8.rounded-full > *,
-.w-10.h-10.rounded-full > *,
-.w-12.h-12.rounded-full > *,
-.w-14.h-14.rounded-full > *,
-.w-16.h-16.rounded-full > *,
-.w-20.h-20.rounded-full > *,
-[class*="rounded-full"].flex.items-center.justify-center > *,
-[class*="player-"] [class*="rounded-full"] > *,
-[class*="w-"][class*="h-"][class*="rounded-full"] > * {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+  -webkit-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  width: var(--circle-size, 2rem) !important;
+  min-width: var(--circle-size, 2rem) !important;
+  max-width: var(--circle-size, 2rem) !important;
+  height: var(--circle-size, 2rem) !important;
+  min-height: var(--circle-size, 2rem) !important;
+  max-height: var(--circle-size, 2rem) !important;
+  flex: 0 0 var(--circle-size, 2rem) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -701,3 +683,14 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
 .w-14.h-14.rounded-full { --circle-size: 3.5rem; }
 .w-16.h-16.rounded-full { --circle-size: 4rem; }
 .w-20.h-20.rounded-full { --circle-size: 5rem; }
+
+/* iOS Safari fix specific */
+@supports (-webkit-touch-callout: none) {
+  [class*="rounded-full"],
+  .player-indicator {
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+  }
+}
