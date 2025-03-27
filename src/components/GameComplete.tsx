@@ -266,7 +266,7 @@ const GameComplete: React.FC = () => {
       </div>
       
       <div className="text-center text-gray-500 text-sm mt-6">
-        <p>Mulțumim că ai jucat Whist Score Keeper!</p>
+        <p>Mulțumim că ai folosit Whist Score Keeper!</p>
         <div className="mt-2 flex justify-center">
           <span className="text-xl">♠ ♥ ♣ ♦</span>
         </div>
