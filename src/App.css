@@ -59,7 +59,7 @@
   --error: #ef4444;
   --warning: #f59e0b;
   --info: #3b82f6;
-  
+
   /* Spacing system */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -67,29 +67,31 @@
   --space-lg: 1.5rem;
   --space-xl: 2rem;
   --space-2xl: 3rem;
-  
+
   /* Border radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-full: 9999px;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
   /* Transitions */
   --transition-fast: 150ms;
   --transition-normal: 250ms;
   --transition-slow: 350ms;
-  
+
   /* Card styles */
   --card-bg: white;
   --card-shadow: var(--shadow-md);
   --card-hover-shadow: var(--shadow-lg);
-  
+
   /* Dark mode colors - pentru implementare viitoare */
   --dark-bg: #111827;
   --dark-card-bg: #1f2937;
@@ -106,12 +108,12 @@
     --primary-light: #1e1b4b;
     --primary-dark: #c7d2fe;
   }
-  
+
   body.dark-theme {
     background-color: var(--dark-bg);
     color: var(--dark-text);
   }
-  
+
   body.dark-theme .card {
     background-color: var(--dark-card-bg);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
@@ -120,8 +122,8 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -165,7 +167,7 @@ body {
 }
 
 .btn::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -194,7 +196,8 @@ body {
 .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:active {
@@ -229,8 +232,13 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .animate-bounce {
@@ -238,8 +246,13 @@ body {
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-25%); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25%);
+  }
 }
 
 /* Badge styles */
@@ -273,7 +286,12 @@ body {
 }
 
 /* Tipografie */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
   line-height: 1.2;
   font-weight: 700;
@@ -354,15 +372,15 @@ p {
   .container {
     padding: 0 var(--space-sm);
   }
-  
+
   h1 {
     font-size: 1.5rem;
   }
-  
+
   h2 {
     font-size: 1.25rem;
   }
-  
+
   h3 {
     font-size: 1.125rem;
   }
@@ -443,18 +461,34 @@ p {
 
 /* Animații și tranziții îmbunătățite */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .fade-in {
@@ -475,7 +509,103 @@ p {
 }
 
 @keyframes highlight {
-  0% { background-color: rgba(99, 102, 241, 0); }
-  50% { background-color: rgba(99, 102, 241, 0.2); }
-  100% { background-color: rgba(99, 102, 241, 0); }
+  0% {
+    background-color: rgba(99, 102, 241, 0);
+  }
+  50% {
+    background-color: rgba(99, 102, 241, 0.2);
+  }
+  100% {
+    background-color: rgba(99, 102, 241, 0);
+  }
+}
+
+/* Îmbunătățim suportul pentru dark mode */
+body.dark-theme {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+/* Componente generale în dark mode */
+body.dark-theme .card,
+body.dark-theme .prediction-phase,
+body.dark-theme .tricks-phase,
+body.dark-theme .game-complete,
+body.dark-theme .game-setup {
+  background-color: var(--dark-card-bg);
+  color: var(--dark-text);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+/* Bordurile în dark mode */
+body.dark-theme .border,
+body.dark-theme .player-prediction {
+  border-color: var(--dark-border) !important;
+}
+
+/* Text-ul secundar în dark mode */
+body.dark-theme .text-gray-600,
+body.dark-theme .text-gray-700,
+body.dark-theme .text-gray-800 {
+  color: var(--dark-text-secondary);
+}
+
+/* Butoanele în dark mode */
+body.dark-theme .btn-secondary,
+body.dark-theme button[disabled] {
+  background-color: var(--dark-border);
+  color: var(--dark-text-secondary);
+  border-color: var(--dark-border);
+}
+
+/* Butoanele hover în dark mode */
+body.dark-theme .btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+/* Inputs și fields în dark mode */
+body.dark-theme input,
+body.dark-theme select {
+  background-color: var(--dark-card-bg);
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+/* Badge-uri în dark mode */
+body.dark-theme .badge-primary {
+  background-color: var(--primary-dark);
+  color: var(--primary-light);
+}
+
+body.dark-theme .badge-success {
+  background-color: #064e3b;
+  color: #d1fae5;
+}
+
+body.dark-theme .badge-error {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+}
+
+body.dark-theme .badge-warning {
+  background-color: var(--secondary-hover);
+  color: var(--secondary-light);
+}
+
+/* Progres bar în dark mode */
+body.dark-theme .progress {
+  background-color: var(--dark-border);
+}
+
+/* Scrollbar în dark mode */
+body.dark-theme ::-webkit-scrollbar-track {
+  background: var(--dark-border);
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
