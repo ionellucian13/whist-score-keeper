@@ -644,3 +644,36 @@ body.dark-theme ::-webkit-scrollbar-thumb {
 body.dark-theme ::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
+
+/* Asigurăm că bulinele colorate rămân perfect rotunde pe toate dispozitivele */
+[class*="rounded-full"],
+[class*="rounded-full"]::before,
+[class*="rounded-full"]::after {
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+/* Fixarea specifică pentru bulinele cu numerele jucătorilor */
+.w-8.h-8.rounded-full,
+.w-10.h-10.rounded-full,
+.w-12.h-12.rounded-full,
+.w-14.h-14.rounded-full,
+.w-16.h-16.rounded-full,
+.w-20.h-20.rounded-full {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 50% !important;
+  transform: translateZ(0) !important; /* Forțează hardware acceleration */
+}
+
+/* Previne comportamentul responsive care deformează bulinele */
+@media screen and (max-width: 640px) {
+  [class*="rounded-full"] {
+    max-height: none !important;
+    max-width: none !important;
+    transform: translateZ(0) !important;
+  }
+}
