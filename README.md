@@ -1,46 +1,87 @@
-# Getting Started with Create React App
+# Romanian Whist Scorekeeper
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A responsive web application for keeping score in Romanian Whist card games.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Create and manage Romanian Whist games with 3-6 players
+- Track player predictions and actual tricks won
+- Automatic score calculation based on Romanian Whist rules
+- Real-time scoreboard updates
+- Support for game progression through multiple rounds
+- Mobile-friendly design
+- Auto-suggestion for previously used player names
+- Final rankings and game statistics
 
-### `npm start`
+## Game Rules
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Romanian Whist is a trick-taking card game that follows these basic rules:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Players predict how many tricks they'll win at the start of each round
+- The sum of all predictions cannot equal the total tricks available
+- Correct predictions earn 5 points plus the number of tricks won
+- Incorrect predictions result in a penalty equal to the difference between prediction and actual tricks
 
-### `npm test`
+For full rules, see the in-app rules modal.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Getting Started
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js (version 14 or higher)
+- npm (comes with Node.js)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repository:
 
-### `npm run eject`
+   ```
+   git clone https://github.com/yourusername/whist-score-keeper.git
+   cd whist-score-keeper
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. Install dependencies:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```
+   npm install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+3. Start the development server:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+   ```
+   npm start
+   ```
 
-## Learn More
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## CI/CD Pipeline
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **CI Workflow**: Runs on every PR and push to the main branch, performing:
+  - Type checking with TypeScript
+  - Unit tests with Jest
+  - Building the application
+  
+- **Code Quality Checks**: Automatically checks:
+  - ESLint for code quality rules
+  - Prettier for code formatting
+  
+- **Deployment**: Automatically deploys to GitHub Pages when code is pushed to the main branch
+
+### Status Badges
+
+[![CI/CD Pipeline](https://github.com/yourusername/whist-score-keeper/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/whist-score-keeper/actions/workflows/ci.yml)
+[![Code Quality](https://github.com/yourusername/whist-score-keeper/actions/workflows/code-quality.yml/badge.svg)](https://github.com/yourusername/whist-score-keeper/actions/workflows/code-quality.yml)
+[![Deploy to GitHub Pages](https://github.com/yourusername/whist-score-keeper/actions/workflows/deploy.yml/badge.svg)](https://github.com/yourusername/whist-score-keeper/actions/workflows/deploy.yml)
+
+## Technologies Used
+
+- React with TypeScript
+- Tailwind CSS for styling
+- Context API for state management
+- Local Storage for game persistence
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

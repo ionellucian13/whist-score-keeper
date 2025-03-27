@@ -1,0 +1,46 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup ESLint
+        # This step ensures ESLint is set up for the project
+        run: |
+          if [ ! -f .eslintrc.js ] && [ ! -f .eslintrc.json ]; then
+            echo "Setting up ESLint configuration"
+            npm install --save-dev eslint eslint-plugin-react eslint-plugin-react-hooks @typescript-eslint/eslint-plugin @typescript-eslint/parser
+            npx eslint --init
+          fi
+
+      - name: Run ESLint
+        run: npx eslint --ext .js,.jsx,.ts,.tsx ./src || true
+
+      - name: Check formatting with Prettier
+        run: |
+          # Install Prettier if not already in dependencies
+          if ! grep -q '"prettier"' package.json; then
+            npm install --save-dev prettier
+          fi
+          npx prettier --check "src/**/*.{js,jsx,ts,tsx,json,css,md}" || true
+
+      - name: Run type checking
+        run: npx tsc --noEmit
