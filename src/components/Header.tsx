@@ -104,7 +104,12 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
     <header className="app-header">
       <div className="header-content">
         <h1 className="logo">
-          <span className="card-icon">♠♥♣♦</span>
+          <span className="card-icon">
+            <span className="spade">♠</span>
+            <span className="heart">♥</span>
+            <span className="club">♣</span>
+            <span className="diamond">♦</span>
+          </span>
           Whist Românesc
         </h1>
         

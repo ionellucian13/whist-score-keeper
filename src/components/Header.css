@@ -54,6 +54,18 @@ body.dark-theme .header-content h1.logo {
   margin-right: 0.5rem;
   display: inline-block;
   animation: float 3s ease-in-out infinite;
+  color: inherit;
+}
+
+/* Stiluri specifice pentru fiecare simbol de carte */
+.card-icon .spade,
+.card-icon .club {
+  color: #000000; /* negru pentru pică și treflă */
+}
+
+.card-icon .heart,
+.card-icon .diamond {
+  color: #E41B17; /* roșu pentru inimă și caro */
 }
 
 @keyframes float {
