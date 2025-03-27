@@ -43,12 +43,12 @@ const WelcomeAlert: React.FC = () => {
         </div>
         
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          🎮 <span className="font-medium">Whist Score Keeper</span> e partenerul tău de joc, nu jocul însuși!
+          🎮 <span className="font-medium">Whist Score Keeper</span> este partenerul tău de joc, nu jocul însuși!
         </p>
         
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           Această aplicație te ajută să ții scorul la jocul de Whist pe care îl joci în realitate cu prietenii tăi, 
-          fără nevoia de hârtie și creion.
+          fără a avea nevoie de hârtie și creion.
         </p>
         
         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 p-3 rounded-lg mb-4">
