@@ -167,11 +167,11 @@ const PredictionPhase: React.FC = () => {
             </div>
             
             {canBet(player.id) && (
-              <div className="bet-buttons grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3 fade-in">
+              <div className="bet-buttons flex flex-wrap gap-1 mt-2 fade-in">
                 {getPossibleBets(player.id).map((betValue) => (
                   <button
                     key={betValue}
-                    className="bet-button px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 shadow-sm"
+                    className="bet-button w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all text-sm font-medium hover:scale-105 active:scale-95"
                     onClick={() => handlePredictionSelect(player.id, betValue)}
                   >
                     {betValue}
