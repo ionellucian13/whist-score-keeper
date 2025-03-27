@@ -16,12 +16,13 @@ const GameContent: React.FC = () => {
   // Testează și afișează structura jocului în consolă (pentru dezvoltare)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      // Import dinamic pentru a evita dependența directă
-      const { _testGameStructure, _testMediumGame } = require('./utils/gameUtils');
-      // Testează funcțiile pentru fiecare tip de joc și afișează în consolă
-      _testGameStructure();
-      // Testează specific jocul mediu pentru a verifica numărul corect de runde cu 8 mâini
-      _testMediumGame();
+      // Dynamic import using ES modules
+      import('./utils/gameUtils').then(({ _testGameStructure, _testMediumGame }) => {
+        // Test functions for each game type and display in console
+        _testGameStructure();
+        // Test specifically medium game to verify correct number of rounds with 8 hands
+        _testMediumGame();
+      });
     }
   }, []);
 

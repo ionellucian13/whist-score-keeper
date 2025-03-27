@@ -55,4 +55,12 @@ export enum ConsecutiveStreakType {
   NONE = 'none',
   CORRECT = 'correct',
   INCORRECT = 'incorrect'
+}
+
+export interface PlayerRanking {
+  id: string;
+  name: string;
+  color: string;
+  score: number;
+  rank: number;
 } 

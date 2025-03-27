@@ -128,7 +128,7 @@ export const ensureUniquePlayers = (players: Player[]): Player[] => {
 };
 
 // Funcție pentru testarea structurii jocului și afișarea în consolă
-export const _testGameStructure = (numPlayers: number = 4) => {
+export const _testGameStructure = (numPlayers = 4) => {
   // Testează jocul scurt
   console.group("TEST JOC SCURT (GameType.SHORT)");
   console.log(`Total runde: ${calculateTotalRounds(numPlayers, GameType.SHORT)}`);
@@ -237,7 +237,7 @@ export const checkConsecutiveRounds = (game: Game, playerId: string): { bonus: n
   }
 
   // Începem de la cea mai veche rundă și construim un streak
-  let currentStreak: StreakInfo = { count: 0, type: ConsecutiveStreakType.NONE };
+  let currentStreak = { count: 0, type: ConsecutiveStreakType.NONE };
   
   // Parcurgem toate rundele și menținem streak-ul
   for (let i = 0; i < game.rounds.length; i++) {
