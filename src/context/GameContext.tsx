@@ -34,6 +34,7 @@ interface GameContextType {
   getPlayerById: (id: string) => Player | undefined;
   getRoundByNumber: (roundNumber: number) => Round | undefined;
   getPlayerCumulativeScore: (playerId: string, upToRound: number) => number;
+  restartGameWithSamePlayers: () => void;
 }
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -309,6 +310,39 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return getPlayerCumulativeScore(game, playerId, upToRound);
   };
 
+  const restartGameWithSamePlayers = () => {
+    if (!game) return;
+    
+    // Extragem numele jucătorilor și tipul jocului din jocul curent
+    const playerNames = game.players.map(player => player.name);
+    const gameType = game.gameType;
+    
+    // Resetăm starea jocului
+    setCurrentRound(null);
+    setCurrentRoundPredictions(new Map());
+    setCurrentRoundTricks(new Map());
+    setRankings([]);
+    setError(null);
+    
+    // Creăm un joc nou cu aceiași jucători și același tip de joc
+    try {
+      const newGame = createNewGame(playerNames, gameType);
+      setGame(newGame);
+      
+      // Inițializăm prima rundă
+      const firstRound = initializeRound(newGame);
+      setCurrentRound(firstRound);
+      
+      setGamePhase(GamePhase.PREDICTION);
+      
+      // Salvăm noul joc în localStorage
+      localStorage.setItem('whistGame', JSON.stringify(newGame));
+    } catch (error) {
+      console.error('Failed to restart game:', error);
+      setError('A apărut o eroare la repornirea jocului');
+    }
+  };
+
   const value = {
     game,
     gamePhase,
@@ -329,7 +363,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     submitPredictions,
     getPlayerById,
     getRoundByNumber,
-    getPlayerCumulativeScore: getPlayerCumulativeScoreFunc
+    getPlayerCumulativeScore: getPlayerCumulativeScoreFunc,
+    restartGameWithSamePlayers
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../context/GameContext';
+import { Player, PlayerRanking } from '../models/types';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
-
-interface PlayerRanking {
-  id: string;
-  name: string;
-  color: string;
-  score: number;
-  rank: number;
-}
+import { useWindowSize } from '../utils/hooks';
 
 const GameComplete: React.FC = () => {
-  const { game, resetGame } = useGameContext();
+  const { game, resetGame, restartGameWithSamePlayers } = useGameContext();
   const [rankings, setRankings] = useState<PlayerRanking[]>([]);
   const [showConfetti, setShowConfetti] = useState(true);
   const { width, height } = useWindowSize();
@@ -21,12 +14,10 @@ const GameComplete: React.FC = () => {
     if (game) {
       // Calculează scorul final pentru fiecare jucător
       const playerRankings: PlayerRanking[] = game.players.map(player => {
-        // Obține toate rezultatele pentru acest jucător
         const playerResults = game.rounds.flatMap(round => 
           round.results.filter(result => result.playerId === player.id)
         );
         
-        // Calculează scorul total
         const totalScore = playerResults.reduce((sum, result) => sum + result.score, 0);
         
         return {
@@ -34,14 +25,13 @@ const GameComplete: React.FC = () => {
           name: player.name,
           color: player.color,
           score: totalScore,
-          rank: 0 // vom calcula asta după sortare
+          rank: 0
         };
       });
       
-      // Sortează jucătorii după scor (descrescător)
+      // Sortează și atribuie ranguri
       playerRankings.sort((a, b) => b.score - a.score);
       
-      // Atribuie ranguri (ținând cont de scoruri egale)
       let currentRank = 1;
       let previousScore = playerRankings[0]?.score;
       
@@ -55,7 +45,6 @@ const GameComplete: React.FC = () => {
       
       setRankings(playerRankings);
       
-      // Oprește confetti după 5 secunde
       const timer = setTimeout(() => {
         setShowConfetti(false);
       }, 5000);
@@ -63,8 +52,14 @@ const GameComplete: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [game]);
-  
-  const handlePlayAgain = () => {
+
+  const handleNewGameSamePlayers = () => {
+    if (game) {
+      restartGameWithSamePlayers();
+    }
+  };
+
+  const handleNewGameDifferentPlayers = () => {
     resetGame();
   };
   
@@ -72,19 +67,16 @@ const GameComplete: React.FC = () => {
     if (!game) return;
     
     try {
-      // Creează textul pentru partajare
       const shareText = `Rezultate Whist:\n${rankings.map(player => 
         `${player.rank}. ${player.name}: ${player.score} puncte`
       ).join('\n')}`;
       
-      // Verifică dacă API-ul de partajare este disponibil
       if (navigator.share) {
         navigator.share({
           title: 'Rezultate Whist',
           text: shareText
         });
       } else {
-        // Copia în clipboard ca alternativă
         navigator.clipboard.writeText(shareText);
         alert('Rezultatele au fost copiate în clipboard!');
       }
@@ -216,31 +208,40 @@ const GameComplete: React.FC = () => {
         </table>
       </div>
       
-      <div className="action-buttons space-y-3">
+      <div className="mt-6 space-y-3">
         <button
-          onClick={handlePlayAgain}
-          className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
+          onClick={handleNewGameSamePlayers}
+          className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium flex items-center justify-center"
         >
-          Joc Nou
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+          </svg>
+          Joc Nou cu Aceiași Jucători
+        </button>
+
+        <button
+          onClick={handleNewGameDifferentPlayers}
+          className="w-full p-3 bg-white border-2 border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium flex items-center justify-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+          </svg>
+          Joc Nou cu Jucători Diferiți
         </button>
         
         <button
           onClick={handleShare}
-          className="w-full p-3 border border-indigo-500 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium flex items-center justify-center"
+          className="w-full p-3 border border-gray-300 text-gray-600 rounded-md hover:bg-gray-50 transition-colors font-medium flex items-center justify-center"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
           </svg>
           Partajează Rezultatele
         </button>
-        
-        <div className="text-center text-gray-500 text-sm mt-4">
-          Mulțumim că ai jucat Whist Score Keeper!
-        </div>
+      </div>
+      
+      <div className="text-center text-gray-500 text-sm mt-4">
+        Mulțumim că ai jucat Whist Score Keeper!
       </div>
     </div>
   );
