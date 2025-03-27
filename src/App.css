@@ -1,3 +1,6 @@
+/* Importăm fonturi Google noi */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap");
+
 .App {
   text-align: center;
 }
@@ -38,13 +41,23 @@
 }
 
 :root {
-  --primary-color: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-light: #eef2ff;
-  --primary-dark: #3730a3;
-  --secondary-color: #f59e0b;
-  --secondary-hover: #d97706;
-  --secondary-light: #fef3c7;
+  /* Paleta de culori îmbunătățită */
+  --primary-color: #5465ff;
+  --primary-hover: #4354eb;
+  --primary-light: #e0e4ff;
+  --primary-dark: #2e3a87;
+  --primary-gradient: linear-gradient(135deg, #5465ff 0%, #788bff 100%);
+
+  --secondary-color: #ff9e2c;
+  --secondary-hover: #f88c00;
+  --secondary-light: #fff3e0;
+  --secondary-dark: #e67e00;
+  --secondary-gradient: linear-gradient(135deg, #ff9e2c 0%, #ffbb6e 100%);
+
+  --accent-color: #00c2a8;
+  --accent-hover: #00a58e;
+  --accent-light: #e0fff9;
+
   --neutral-50: #fafafa;
   --neutral-100: #f4f4f5;
   --neutral-200: #e4e4e7;
@@ -55,10 +68,11 @@
   --neutral-700: #3f3f46;
   --neutral-800: #27272a;
   --neutral-900: #18181b;
-  --success: #10b981;
-  --error: #ef4444;
-  --warning: #f59e0b;
-  --info: #3b82f6;
+
+  --success: #06d77b;
+  --error: #ff4e64;
+  --warning: #ff9e2c;
+  --info: #4699ff;
 
   /* Spacing system */
   --space-xs: 0.25rem;
@@ -75,12 +89,12 @@
   --radius-xl: 1rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  /* Shadows îmbunătățite */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Transitions */
   --transition-fast: 150ms;
@@ -92,20 +106,19 @@
   --card-shadow: var(--shadow-md);
   --card-hover-shadow: var(--shadow-lg);
 
-  /* Dark mode colors - pentru implementare viitoare */
-  --dark-bg: #111827;
-  --dark-card-bg: #1f2937;
-  --dark-text: #f9fafb;
-  --dark-text-secondary: #9ca3af;
-  --dark-border: #374151;
+  /* Dark mode colors */
+  --dark-bg: #121826;
+  --dark-card-bg: #1e2538;
+  --dark-text: #f1f5f9;
+  --dark-text-secondary: #a3b1cc;
+  --dark-border: #2e3b52;
 }
 
-/* Adăugăm suport pentru dark mode preferat de sistem */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-color: #818cf8;
-    --primary-hover: #6366f1;
-    --primary-light: #1e1b4b;
+    --primary-color: #788bff;
+    --primary-hover: #5465ff;
+    --primary-light: #1c2146;
     --primary-dark: #c7d2fe;
   }
 
@@ -116,19 +129,21 @@
 
   body.dark-theme .card {
     background-color: var(--dark-card-bg);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
   }
 }
 
 body {
   margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--neutral-100);
   color: var(--neutral-800);
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 /* Îmbunătățiri pentru layout */
@@ -138,32 +153,36 @@ body {
   padding: 0 var(--space-md);
 }
 
-/* Card styles */
+/* Card styles îmbunătățite */
 .card {
   background-color: white;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  transition: box-shadow var(--transition-normal);
+  transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .card:hover {
   box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
 }
 
-/* Button styles */
+/* Button styles îmbunătățite */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1.25rem;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: var(--radius-md);
-  transition: all var(--transition-normal);
+  transition: all 0.25s cubic-bezier(0.17, 0.67, 0.83, 0.67);
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  letter-spacing: 0.01em;
+  border: none;
 }
 
 .btn::after {
@@ -173,7 +192,7 @@ body {
   left: 50%;
   width: 5px;
   height: 5px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   opacity: 0;
   border-radius: 100%;
   transform: scale(1, 1) translate(-50%, -50%);
@@ -181,28 +200,26 @@ body {
 }
 
 .btn:active::after {
-  opacity: 0.3;
-  transform: scale(20, 20) translate(-50%, -50%);
-  transition: transform 0.5s, opacity 1s;
+  opacity: 0.4;
+  transform: scale(25, 25) translate(-50%, -50%);
+  transition: transform 0.4s ease-out, opacity 0.8s ease-out;
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background: var(--primary-gradient);
   color: white;
-  border: none;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 10px rgba(84, 101, 255, 0.3);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(84, 101, 255, 0.4);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 5px rgba(84, 101, 255, 0.3);
 }
 
 .btn-primary:disabled {
@@ -211,14 +228,17 @@ body {
 }
 
 .btn-secondary {
-  background-color: white;
+  background: white;
   color: var(--neutral-700);
-  border: 1px solid var(--neutral-300);
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary:hover {
-  background-color: var(--neutral-50);
-  border-color: var(--neutral-400);
+  background: var(--neutral-50);
+  border-color: var(--neutral-300);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .btn-icon {
@@ -255,63 +275,68 @@ body {
   }
 }
 
-/* Badge styles */
+/* Badge styles îmbunătățite */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.125rem 0.5rem;
+  padding: 0.25rem 0.65rem;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: var(--radius-full);
+  letter-spacing: 0.01em;
 }
 
 .badge-primary {
-  background-color: var(--primary-light);
-  color: var(--primary-dark);
+  background: var(--primary-light);
+  color: var(--primary-color);
 }
 
 .badge-success {
-  background-color: #ecfdf5;
-  color: #065f46;
+  background: #e6f9f1;
+  color: #057a55;
 }
 
 .badge-error {
-  background-color: #fef2f2;
-  color: #b91c1c;
+  background: #feecef;
+  color: #e02d44;
 }
 
 .badge-warning {
-  background-color: var(--secondary-light);
-  color: var(--secondary-hover);
+  background: var(--secondary-light);
+  color: var(--secondary-dark);
 }
 
-/* Tipografie */
+/* Îmbunătățiri pentru titluri */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: "Montserrat", sans-serif;
   margin-top: 0;
   line-height: 1.2;
   font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 h1 {
-  font-size: 1.875rem;
+  font-size: 2rem;
+  font-weight: 800;
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.65rem;
+  font-weight: 700;
 }
 
 h3 {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
 }
 
 p {
   margin: 0 0 1rem 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* Utilitare */
@@ -526,15 +551,21 @@ body.dark-theme {
   color: var(--dark-text);
 }
 
+body.dark-theme .app-header {
+  background: linear-gradient(to right, #1a2136, #1e2538);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+}
+
 /* Componente generale în dark mode */
 body.dark-theme .card,
 body.dark-theme .prediction-phase,
 body.dark-theme .tricks-phase,
 body.dark-theme .game-complete,
 body.dark-theme .game-setup {
-  background-color: var(--dark-card-bg);
+  background: linear-gradient(to bottom right, #1e2538, #222c40);
   color: var(--dark-text);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--dark-border);
 }
 
 /* Bordurile în dark mode */
@@ -551,16 +582,20 @@ body.dark-theme .text-gray-800 {
 }
 
 /* Butoanele în dark mode */
-body.dark-theme .btn-secondary,
-body.dark-theme button[disabled] {
-  background-color: var(--dark-border);
-  color: var(--dark-text-secondary);
-  border-color: var(--dark-border);
+body.dark-theme .btn-primary {
+  background: linear-gradient(135deg, #5465ff 0%, #4354eb 100%);
+  box-shadow: 0 4px 15px rgba(84, 101, 255, 0.25);
 }
 
-/* Butoanele hover în dark mode */
+body.dark-theme .btn-secondary {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--dark-text);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 body.dark-theme .btn-secondary:hover {
-  background-color: #4b5563;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Inputs și fields în dark mode */
