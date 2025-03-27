@@ -186,7 +186,9 @@ const GameSetup: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center mb-2">
-                  <div className={`w-4 h-4 rounded-full mr-2 ${gameType === type ? 'bg-indigo-600' : 'bg-gray-200'}`}></div>
+                  <div className={`game-type-indicator w-4 h-4 rounded-full mr-2 ${gameType === type ? 'bg-indigo-600' : 'bg-gray-200'}`}>
+                    <span></span>
+                  </div>
                   <span className="font-medium">
                     {type === GameType.SHORT ? 'Scurt' : type === GameType.MEDIUM ? 'Mediu' : 'Lung'}
                   </span>

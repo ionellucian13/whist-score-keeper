@@ -655,6 +655,7 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
 }
 
 /* Fixarea specifică pentru bulinele cu numerele jucătorilor - folosim o abordare pentru iOS */
+.w-4.h-4.rounded-full,
 .w-8.h-8.rounded-full,
 .w-10.h-10.rounded-full,
 .w-12.h-12.rounded-full,
@@ -672,6 +673,7 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
 }
 
 /* Conținutul cercurilor */
+.w-4.h-4.rounded-full > *,
 .w-8.h-8.rounded-full > *,
 .w-10.h-10.rounded-full > *,
 .w-12.h-12.rounded-full > *,
@@ -692,6 +694,7 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
 }
 
 /* Dimensiuni specifice */
+.w-4.h-4.rounded-full { --circle-size: 1rem; }
 .w-8.h-8.rounded-full { --circle-size: 2rem; }
 .w-10.h-10.rounded-full { --circle-size: 2.5rem; }
 .w-12.h-12.rounded-full { --circle-size: 3rem; }
