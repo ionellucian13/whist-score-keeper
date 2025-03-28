@@ -8,7 +8,9 @@ import TricksPhase from './components/TricksPhase';
 import GameComplete from './components/GameComplete';
 import Scoreboard from './components/Scoreboard';
 import RulesModal from './components/RulesModal';
+import './styles/design-system.css';
 import './App.css';
+import ConfirmModal from './components/ConfirmModal';
 
 const WelcomeAlert: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -73,35 +75,60 @@ const WelcomeAlert: React.FC = () => {
 };
 
 const GameContent: React.FC = () => {
-  const { gamePhase } = useGameContext();
-  
-  // Testează și afișează structura jocului în consolă (pentru dezvoltare)
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      // Dynamic import using ES modules
-      import('./utils/gameUtils').then(({ _testGameStructure, _testMediumGame }) => {
-        // Test functions for each game type and display in console
-        _testGameStructure();
-        // Test specifically medium game to verify correct number of rounds with 8 hands
-        _testMediumGame();
-      });
-    }
-  }, []);
+  const { game, gamePhase } = useGameContext();
+  const [showRules, setShowRules] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
+  const [confirmMessage, setConfirmMessage] = useState('');
+
+  const handleShowRules = () => {
+    setShowRules(true);
+  };
+
+  const handleHideRules = () => {
+    setShowRules(false);
+  };
+
+  const handleConfirm = (message: string, action: () => void) => {
+    setConfirmMessage(message);
+    setConfirmAction(() => action);
+    setShowConfirm(true);
+  };
+
+  const handleCancelConfirm = () => {
+    setShowConfirm(false);
+  };
+
+  const handleConfirmAction = () => {
+    confirmAction();
+    setShowConfirm(false);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-6 md:py-8 flex flex-col gap-6">
-      <div className="w-full max-w-4xl mx-auto">
-        {gamePhase === GamePhase.SETUP && <GameSetup />}
-        {gamePhase === GamePhase.PREDICTION && <PredictionPhase />}
-        {gamePhase === GamePhase.TRICKS && <TricksPhase />}
-        {gamePhase === GamePhase.COMPLETE && <GameComplete />}
-      </div>
+    <div className="app-container">
+      <Header onShowRules={handleShowRules} onConfirm={handleConfirm} />
       
-      {/* Afișăm Scoreboard pe toate paginile, dar doar dacă nu suntem în faza de setup */}
-      {gamePhase !== GamePhase.SETUP && (
-        <div className="w-full max-w-4xl mx-auto">
-          <Scoreboard />
-        </div>
+      <main className="main-content">
+        {!game && <GameSetup />}
+        
+        {game && (
+          <>
+            {gamePhase === GamePhase.Scoreboard && <Scoreboard />}
+            {gamePhase === GamePhase.Prediction && <PredictionPhase />}
+            {gamePhase === GamePhase.Tricks && <TricksPhase />}
+            {gamePhase === GamePhase.Complete && <GameComplete />}
+          </>
+        )}
+      </main>
+      
+      {showRules && <RulesModal onClose={handleHideRules} />}
+      
+      {showConfirm && (
+        <ConfirmModal
+          message={confirmMessage}
+          onConfirm={handleConfirmAction}
+          onCancel={handleCancelConfirm}
+        />
       )}
     </div>
   );
@@ -123,7 +150,6 @@ const App: React.FC = () => {
         <footer className="py-4 px-6 text-center text-neutral-500 dark:text-neutral-400 text-sm">
           <p>© {new Date().getFullYear()} Whist Românesc | Scor Keeper</p>
         </footer>
-        <RulesModal isOpen={showRulesModal} onClose={closeRulesModal} />
         <WelcomeAlert />
       </div>
     </GameProvider>
