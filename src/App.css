@@ -661,27 +661,7 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
 .dealer-badge,
 .prediction-badge {
   position: relative !important;
-  border-radius: 50% !important;
-  aspect-ratio: 1 / 1 !important;
-  -webkit-box-sizing: border-box !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-  width: var(--circle-size, 2rem) !important;
-  min-width: var(--circle-size, 2rem) !important;
-  max-width: var(--circle-size, 2rem) !important;
-  height: var(--circle-size, 2rem) !important;
-  min-height: var(--circle-size, 2rem) !important;
-  max-height: var(--circle-size, 2rem) !important;
-  flex: 0 0 var(--circle-size, 2rem) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Textul din badge-uri trebuie să fie vizibil și bine poziționat */
-.dealer-badge,
-.prediction-badge {
-  border-radius: 9999px !important;
+  border-radius: 0.5rem !important;
   width: auto !important;
   min-width: auto !important;
   max-width: none !important;
@@ -691,32 +671,70 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
   flex: none !important;
   padding: 0.25rem 0.5rem !important;
   white-space: nowrap;
+  aspect-ratio: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* Dimensiuni specifice */
-.w-3.h-3.rounded-full {
-  --circle-size: 0.75rem;
+/* Textul din badge-uri trebuie să fie vizibil și bine poziționat */
+.dealer-badge,
+.prediction-badge {
+  border-radius: 0.5rem !important;
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  flex: none !important;
+  padding: 0.25rem 0.5rem !important;
+  white-space: nowrap;
+  aspect-ratio: auto !important;
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
-.w-4.h-4.rounded-full {
+
+/* Dimensiuni specifice pentru bulinele rotunde - toate au aceeași dimensiune */
+.w-3.h-3.rounded-full,
+.w-4.h-4.rounded-full,
+[class*="player-"] [class*="rounded-full"],
+.player-indicator.rounded-full {
   --circle-size: 1rem;
 }
-.w-8.h-8.rounded-full {
-  --circle-size: 2rem;
+
+/* Uniformizăm stilul pentru bulinele din Scoreboard */
+.scoreboard .player-color,
+[id="scoreboard"] .player-color {
+  --circle-size: 1rem;
+  position: relative !important;
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+  width: var(--circle-size) !important;
+  height: var(--circle-size) !important;
+  display: inline-block !important;
+  margin-right: 0.5rem !important;
 }
-.w-10.h-10.rounded-full {
-  --circle-size: 2.5rem;
-}
-.w-12.h-12.rounded-full {
-  --circle-size: 3rem;
-}
-.w-14.h-14.rounded-full {
-  --circle-size: 3.5rem;
-}
-.w-16.h-16.rounded-full {
-  --circle-size: 4rem;
-}
-.w-20.h-20.rounded-full {
-  --circle-size: 5rem;
+
+/* Responsive design îmbunătățit */
+@media (max-width: 640px) {
+  .dealer-badge,
+  .prediction-badge {
+    font-size: 0.75rem !important;
+    padding: 0.15rem 0.35rem !important;
+  }
+
+  /* Reducem dimensiunea bulinelor pe ecran mic */
+  .w-3.h-3.rounded-full,
+  .w-4.h-4.rounded-full,
+  [class*="player-"] [class*="rounded-full"],
+  .player-indicator.rounded-full,
+  .scoreboard .player-color,
+  [id="scoreboard"] .player-color {
+    --circle-size: 0.875rem;
+  }
 }
 
 /* Stiluri specifice pentru indicatorul de jucător activ */

@@ -150,17 +150,17 @@ const PredictionPhase: React.FC = () => {
             <div className="flex items-center justify-between mb-2">
               <div className="player-identity flex items-center">
                 <span 
-                  className="inline-block w-4 h-4 rounded-full mr-2 transition-transform hover:scale-125" 
+                  className="player-color" 
                   style={{ backgroundColor: player.color }}
                 ></span>
                 <span className="font-medium">{player.name}</span>
                 {isDealer(player.id) && (
-                  <span className="dealer-badge ml-2 text-sm px-2 py-0.5 bg-red-50 text-red-600 rounded-full border border-red-200">Dealer</span>
+                  <span className="dealer-badge ml-2 text-sm px-2 py-0.5 bg-red-50 text-red-600 border border-red-200">Dealer</span>
                 )}
               </div>
               
               {predictions[player.id] !== undefined && (
-                <div className="prediction-badge ml-2 px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                <div className="prediction-badge ml-2 px-2 py-1 bg-green-100 text-green-800 font-medium">
                   Pariu: {predictions[player.id]}
                 </div>
               )}

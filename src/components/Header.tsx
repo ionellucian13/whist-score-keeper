@@ -92,9 +92,11 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
       case GamePhase.PREDICTION:
         return 'Faza de Predicție';
       case GamePhase.TRICKS:
-        return 'Faza de înregistrare a Câștigurilor';
+        return 'Faza de Mâini';
       case GamePhase.COMPLETE:
         return 'Joc Finalizat';
+      case GamePhase.SCOREBOARD:
+        return 'Tabela de Scor';
       default:
         return '';
     }

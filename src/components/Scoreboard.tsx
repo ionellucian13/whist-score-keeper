@@ -8,6 +8,14 @@ interface PlayerScore {
   score: number;
 }
 
+// Constantă pentru a traduce titlul în română
+const TITLE_RO = 'Tabela de Scor';
+
+// Funcție utilă pentru a sorta jucătorii după scor (descrescător)
+const sortPlayersByScore = (results: {player: Player, score: number}[]) => {
+  return [...results].sort((a, b) => b.score - a.score);
+};
+
 const Scoreboard: React.FC = () => {
   const { game, getPlayerCumulativeScore } = useGameContext();
   const [showLegend, setShowLegend] = useState<boolean>(false);
@@ -79,15 +87,10 @@ const Scoreboard: React.FC = () => {
   }
   
   return (
-    <div className="mt-8 bg-white rounded-lg shadow-md p-4 fade-in">
+    <div className="scoreboard p-4 bg-white rounded-lg shadow" id="scoreboard">
+      <h2 className="text-xl font-semibold mb-4">{TITLE_RO}</h2>
+      
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-          Scoreboard
-        </h2>
-        
         <button
           onClick={() => setShowLegend(!showLegend)}
           className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline flex items-center"
@@ -111,8 +114,8 @@ const Scoreboard: React.FC = () => {
         </div>
       )}
       
-      {/* Clasament rapid */}
-      <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* Top players */}
+      <div className="space-y-3 mb-6">
         {playerScores.slice(0, 4).map(({player, score}, index) => {
           const trend = getPlayerTrend(player.id);
           return (
@@ -195,7 +198,7 @@ const Scoreboard: React.FC = () => {
                         {playerRank}
                       </div>
                       <div 
-                        className="inline-block w-4 h-4 rounded-full mr-2" 
+                        className="player-color" 
                         style={{ backgroundColor: player.color }}
                       ></div>
                       <span>{player.name}</span>

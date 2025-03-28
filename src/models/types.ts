@@ -42,7 +42,8 @@ export enum GamePhase {
   SETUP = "setup",
   PREDICTION = "prediction",
   TRICKS = "tricks",
-  COMPLETE = "complete"
+  COMPLETE = "complete",
+  SCOREBOARD = "scoreboard"
 }
 
 export enum GameType {
