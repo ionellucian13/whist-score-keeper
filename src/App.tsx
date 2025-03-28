@@ -78,7 +78,10 @@ const GameContent: React.FC = () => {
   const { game, gamePhase } = useGameContext();
   const [showRules, setShowRules] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
+  const [confirmAction, setConfirmAction] = useState<() => void>(() => {
+    // Funcție implicită goală pentru starea inițială
+    return;
+  });
   const [confirmMessage, setConfirmMessage] = useState('');
 
   const handleShowRules = () => {
