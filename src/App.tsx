@@ -138,15 +138,9 @@ const GameContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [showRulesModal, setShowRulesModal] = React.useState(false);
-  
-  const openRulesModal = () => setShowRulesModal(true);
-  const closeRulesModal = () => setShowRulesModal(false);
-
   return (
     <GameProvider>
       <div className="min-h-screen bg-neutral-100 dark:bg-dark-bg text-neutral-800 dark:text-dark-text flex flex-col transition-colors duration-300">
-        <Header onShowRules={openRulesModal} />
         <main className="flex-grow py-4">
           <GameContent />
         </main>
