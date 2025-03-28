@@ -74,11 +74,29 @@ const Scoreboard: React.FC = () => {
   const getTrendIcon = (trend: 'up' | 'down' | 'stable'): ReactElement => {
     switch (trend) {
       case 'up':
-        return <span className="text-green-500">↑</span>;
+        return (
+          <span className="flex items-center text-success">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+            </svg>
+          </span>
+        );
       case 'down':
-        return <span className="text-red-500">↓</span>;
+        return (
+          <span className="flex items-center text-error">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1v-5a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clipRule="evenodd" />
+            </svg>
+          </span>
+        );
       default:
-        return <span className="text-gray-500">-</span>;
+        return (
+          <span className="flex items-center text-neutral-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
+            </svg>
+          </span>
+        );
     }
   };
   
@@ -87,168 +105,207 @@ const Scoreboard: React.FC = () => {
   }
   
   return (
-    <div className="scoreboard p-4 bg-white rounded-lg shadow" id="scoreboard">
-      <h2 className="text-xl font-semibold mb-4">{TITLE_RO}</h2>
-      
-      <div className="flex justify-between items-center mb-4">
-        <button
-          onClick={() => setShowLegend(!showLegend)}
-          className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline flex items-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          {showLegend ? 'Ascunde legenda' : 'Arată legenda'}
-        </button>
-      </div>
-      
-      {showLegend && (
-        <div className="bg-indigo-50 p-3 rounded-md mb-5 text-sm border border-indigo-100 scale-in">
-          <p className="font-medium mb-2 text-indigo-800">Legendă format scor:</p>
-          <ul className="list-disc pl-5 space-y-1.5 text-indigo-700">
-            <li><span className="text-green-600 font-medium">10</span> = Predicție corectă (5 puncte + numărul de mâini câștigate)</li>
-            <li><span className="text-red-600 font-medium">-2</span> = Predicție incorectă (0 - diferența absolută între predicție și mâini câștigate)</li>
-            <li><span className="font-mono bg-gray-100 px-1 py-0.5 rounded">3/2</span> = Format: Predicție/Mâini câștigate</li>
-            <li><span className="text-purple-600 font-medium">+5/-5</span> = Bonus/penalizare pentru 5 runde consecutive corecte/greșite</li>
-          </ul>
+    <div className="card bg-white dark:bg-dark-card-bg shadow-lg rounded-xl overflow-hidden" id="scoreboard">
+      <div className="p-5">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-100 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-primary-color" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+            </svg>
+            {TITLE_RO}
+          </h2>
+          
+          <button
+            onClick={() => setShowLegend(!showLegend)}
+            className="text-sm flex items-center text-primary-color hover:text-primary-hover dark:text-primary-color dark:hover:text-primary-hover transition-colors"
+            aria-expanded={showLegend}
+            aria-controls="legend-panel"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            {showLegend ? 'Ascunde legenda' : 'Arată legenda'}
+          </button>
         </div>
-      )}
-      
-      {/* Top players */}
-      <div className="space-y-3 mb-6">
-        {playerScores.slice(0, 4).map(({player, score}, index) => {
-          const trend = getPlayerTrend(player.id);
-          return (
-            <div 
-              key={player.id} 
-              className={`flex items-center p-3 rounded-lg border ${
-                index === 0 
-                  ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200 shadow-sm' 
-                  : index === 1
-                    ? 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200'
-                    : index === 2
-                      ? 'bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200'
-                      : 'bg-gray-50 border-gray-200'
-              } transition-all hover:shadow-md`}
-            >
-              <div className="w-10 h-10 flex items-center justify-center rounded-full font-bold text-white mr-3 shadow-sm" style={{ 
-                backgroundColor: index === 0 
-                  ? '#FFD700' 
-                  : index === 1
-                    ? '#C0C0C0'
-                    : index === 2
-                      ? '#CD7F32'
-                      : '#718096' 
-              }}>
-                {index + 1}
-              </div>
-              <div className="flex flex-col flex-grow">
-                <div className="flex items-center">
-                  <div 
-                    className="inline-block w-4 h-4 rounded-full mr-2" 
-                    style={{ backgroundColor: player.color }}
-                  ></div>
-                  <div className="font-medium truncate">{player.name}</div>
+        
+        {showLegend && (
+          <div id="legend-panel" className="bg-info-light dark:bg-info-light/10 p-4 rounded-lg mb-6 text-sm border-l-4 border-info scale-in">
+            <p className="font-medium mb-2 text-info-dark dark:text-info">Legendă format scor:</p>
+            <ul className="space-y-2 text-neutral-700 dark:text-neutral-300">
+              <li className="flex items-center">
+                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-success-light text-success-dark mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                <div className="flex items-center mt-1">
-                  <span className="font-bold text-lg mr-1">{score}</span> 
-                  <span className={`text-sm ${
-                    trend === 'up' 
-                      ? 'text-green-500' 
-                      : trend === 'down' 
-                        ? 'text-red-500' 
-                        : 'text-gray-500'
-                  }`}>
-                    {getTrendIcon(trend)}
-                  </span>
+                <span><span className="text-success font-medium">10</span> = Predicție corectă (5 puncte + numărul de mâini câștigate)</span>
+              </li>
+              <li className="flex items-center">
+                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-error-light text-error-dark mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      {/* Tabel complet cu scorurile */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="min-w-full bg-white text-sm">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="sticky left-0 bg-gray-50 p-3 text-left font-semibold text-gray-600">Jucător</th>
-              {Array.from({ length: totalRounds }, (_, i) => i + 1).map(roundNumber => (
-                <th key={roundNumber} className="p-2 text-center whitespace-nowrap font-semibold text-gray-600">
-                  R{roundNumber}
-                  <div className="text-xs text-gray-500">
-                    ({getCardsForRound(roundNumber)} mâini)
-                  </div>
-                </th>
-              ))}
-              <th className="sticky right-0 bg-gray-50 p-3 text-center font-semibold text-gray-600">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {playerScores.map(({player}) => {
-              const playerRank = getPlayerRank(player.id);
+                <span><span className="text-error font-medium">-2</span> = Predicție incorectă (0 - diferența absolută între predicție și mâini câștigate)</span>
+              </li>
+              <li className="flex items-center">
+                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span><span className="bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded font-mono">3/2</span> = Format: Predicție/Mâini câștigate</span>
+              </li>
+              <li className="flex items-center">
+                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-primary-light text-primary-dark dark:text-primary-color mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span><span className="text-primary-color font-medium">+5/-5</span> = Bonus/penalizare pentru 5 runde consecutive corecte/greșite</span>
+              </li>
+            </ul>
+          </div>
+        )}
+        
+        {/* Top 3 players - podium layout */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4 text-neutral-700 dark:text-neutral-300">Top Jucători</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {playerScores.slice(0, 3).map(({player, score}, index) => {
+              const positionColors = [
+                { bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-200 dark:border-amber-700', medal: '#FFD700' },
+                { bg: 'bg-neutral-50 dark:bg-neutral-800/30', border: 'border-neutral-200 dark:border-neutral-700', medal: '#C0C0C0' },
+                { bg: 'bg-amber-50/70 dark:bg-amber-800/20', border: 'border-amber-200/70 dark:border-amber-800/50', medal: '#CD7F32' },
+              ];
+              
               const trend = getPlayerTrend(player.id);
+              const position = index + 1;
               
               return (
-                <tr key={player.id} className="border-b hover:bg-gray-50 transition-colors">
-                  <td className="sticky left-0 bg-white p-3 font-medium whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 font-bold text-gray-700 mr-2 border">
-                        {playerRank}
-                      </div>
+                <div 
+                  key={player.id} 
+                  className={`flex flex-col items-center p-4 rounded-xl border ${positionColors[index].bg} ${positionColors[index].border} shadow-sm transition-all hover:shadow-md relative overflow-hidden`}
+                >
+                  {position === 1 && (
+                    <div className="absolute -right-6 -top-1 bg-amber-400 text-white py-0.5 px-8 rotate-45 text-xs font-bold shadow-sm">
+                      LIDER
+                    </div>
+                  )}
+                  
+                  <div className="w-16 h-16 mb-3 flex items-center justify-center rounded-full font-bold text-white shadow-md relative" 
+                    style={{ backgroundColor: positionColors[index].medal }}>
+                    <span className="text-xl">{position}</span>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
                       <div 
-                        className="player-color" 
+                        className="w-3 h-3 rounded-full mr-1.5" 
                         style={{ backgroundColor: player.color }}
                       ></div>
-                      <span>{player.name}</span>
-                      <span className={`ml-1 ${
-                        trend === 'up' 
-                          ? 'text-green-500' 
-                          : trend === 'down' 
-                            ? 'text-red-500' 
-                            : 'text-gray-500'
-                      }`}>
-                        {getTrendIcon(trend)}
-                      </span>
+                      <div className="font-semibold text-neutral-800 dark:text-neutral-100">{player.name}</div>
                     </div>
-                  </td>
-                  
-                  {Array.from({ length: totalRounds }, (_, i) => i + 1).map(roundNumber => {
-                    // Găsim rezultatul pentru runda curentă dacă există
-                    const roundData = game.rounds.find(r => r.roundNumber === roundNumber);
-                    const playerResult = roundData?.results.find(result => result.playerId === player.id);
                     
-                    let displayText = '';
-                    let scoreClass = '';
+                    <div className="flex items-center justify-center space-x-1">
+                      <span className="font-bold text-xl text-neutral-900 dark:text-white">{score}</span> 
+                      <span className="ml-1">{getTrendIcon(trend)}</span>
+                    </div>
                     
-                    if (playerResult) {
-                      displayText = `${playerResult.score} (${playerResult.prediction}/${playerResult.tricksWon})`;
-                      scoreClass = playerResult.prediction === playerResult.tricksWon ? 'text-green-600' : 'text-red-600';
-                    }
-                    
-                    return (
-                      <td 
-                        key={roundNumber} 
-                        className={`p-2 text-center ${roundNumber === game.currentRound - 1 ? 'animate-highlight' : ''}`}
-                      >
-                        {playerResult ? (
-                          <span className={`${scoreClass} font-medium`}>{displayText}</span>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </td>
-                    );
-                  })}
-                  
-                  <td className="sticky right-0 bg-white p-3 text-center font-bold">
-                    {playerScores.find(ps => ps.player.id === player.id)?.score || 0}
-                  </td>
-                </tr>
+                    <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+                      {trend === 'up' ? 'Urcă în clasament' : 
+                       trend === 'down' ? 'Coboară în clasament' : 
+                       'Poziție stabilă'}
+                    </div>
+                  </div>
+                </div>
               );
             })}
-          </tbody>
-        </table>
+          </div>
+        </div>
+        
+        {/* Tabel complet cu scorurile */}
+        <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-dark-border">
+          <table className="min-w-full bg-white dark:bg-dark-surface text-sm">
+            <thead>
+              <tr className="bg-neutral-50 dark:bg-dark-card-bg border-b border-neutral-200 dark:border-dark-border">
+                <th className="sticky left-0 bg-neutral-50 dark:bg-dark-card-bg p-3 text-left font-semibold text-neutral-700 dark:text-neutral-300">Jucător</th>
+                {Array.from({ length: totalRounds }, (_, i) => i + 1).map(roundNumber => (
+                  <th key={roundNumber} className="p-2.5 text-center whitespace-nowrap font-semibold text-neutral-700 dark:text-neutral-300">
+                    <div className="flex flex-col items-center">
+                      <span>R{roundNumber}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-500 mt-0.5">
+                        {getCardsForRound(roundNumber)} mâini
+                      </span>
+                    </div>
+                  </th>
+                ))}
+                <th className="sticky right-0 bg-neutral-50 dark:bg-dark-card-bg p-3 text-center font-semibold text-neutral-700 dark:text-neutral-300">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {playerScores.map(({player, score}) => {
+                const playerRank = getPlayerRank(player.id);
+                const trend = getPlayerTrend(player.id);
+                
+                return (
+                  <tr key={player.id} className="border-b border-neutral-200 dark:border-dark-border hover:bg-neutral-50 dark:hover:bg-dark-border/30 transition-colors">
+                    <td className="sticky left-0 bg-white dark:bg-dark-surface p-3 font-medium">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-dark-card-bg font-semibold text-neutral-700 dark:text-neutral-300 mr-3 border border-neutral-200 dark:border-dark-border">
+                          {playerRank}
+                        </div>
+                        <div className="flex items-center">
+                          <div 
+                            className="w-3 h-3 rounded-full mr-2" 
+                            style={{ backgroundColor: player.color }}
+                          ></div>
+                          <span className="text-neutral-800 dark:text-neutral-200">{player.name}</span>
+                        </div>
+                      </div>
+                    </td>
+                    
+                    {Array.from({ length: totalRounds }, (_, i) => i + 1).map(roundNumber => {
+                      const roundData = game.rounds.find(r => r.roundNumber === roundNumber);
+                      const playerResult = roundData?.results.find(r => r.playerId === player.id);
+                      
+                      return (
+                        <td key={`${player.id}-${roundNumber}`} className="p-2 text-center">
+                          {playerResult ? (
+                            <div className="flex flex-col items-center">
+                              <div 
+                                className={`text-sm font-semibold rounded px-2 py-0.5 ${
+                                  playerResult.prediction === playerResult.tricksWon
+                                    ? 'bg-success-light dark:bg-success-light/10 text-success-dark dark:text-success'
+                                    : 'bg-error-light dark:bg-error-light/10 text-error-dark dark:text-error'
+                                }`}
+                              >
+                                {playerResult.score}
+                              </div>
+                              <div className="text-xs mt-1 text-neutral-500 dark:text-neutral-400 font-mono">
+                                {playerResult.prediction}/{playerResult.tricksWon}
+                              </div>
+                            </div>
+                          ) : roundNumber <= game.currentRound ? (
+                            <span className="text-neutral-400 dark:text-neutral-600">-</span>
+                          ) : null}
+                        </td>
+                      );
+                    })}
+                    
+                    <td className="sticky right-0 bg-white dark:bg-dark-surface p-3 text-center font-bold">
+                      <div className="flex items-center justify-center">
+                        <span className="text-neutral-800 dark:text-neutral-200">{score}</span>
+                        <span className="ml-1.5">{getTrendIcon(trend)}</span>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

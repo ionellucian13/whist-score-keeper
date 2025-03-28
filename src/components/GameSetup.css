@@ -116,3 +116,173 @@
 .start-game-button:hover {
   background-color: #434190;
 }
+
+/* Modern GameSetup styles */
+
+.player-indicator {
+  position: relative;
+  transform-origin: center;
+  transition: transform var(--transition-bounce), box-shadow var(--transition-normal);
+  z-index: 1;
+  box-shadow: var(--shadow-sm);
+}
+
+.player-indicator::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  transition: opacity var(--transition-normal);
+}
+
+.player-indicator:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.player-indicator:hover::after {
+  opacity: 0.5;
+}
+
+.game-type-badge {
+  transition: all var(--transition-normal);
+}
+
+.game-type-indicator {
+  position: relative;
+  transition: all var(--transition-normal);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+[class*='badge'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  line-height: 1;
+}
+
+.badge-primary {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.badge-secondary {
+  background-color: var(--secondary-light);
+  color: var(--secondary-dark);
+}
+
+.badge-success {
+  background-color: var(--success-light);
+  color: var(--success-dark);
+}
+
+.badge-error {
+  background-color: var(--error-light);
+  color: var(--error-dark);
+}
+
+.badge-warning {
+  background-color: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.badge-info {
+  background-color: var(--info-light);
+  color: var(--info-dark);
+}
+
+/* Input focus animation */
+input:focus {
+  transition: all var(--transition-normal);
+  box-shadow: 0 0 0 2px var(--primary-light), 0 0 0 4px rgba(65, 84, 255, 0.15);
+}
+
+/* Dark mode adjustments */
+body.dark-theme input:focus {
+  box-shadow: 0 0 0 2px rgba(93, 121, 255, 0.2), 0 0 0 4px rgba(93, 121, 255, 0.1);
+}
+
+/* Game type selection hover effects */
+[class*='game-type'] {
+  transition: all var(--transition-normal);
+}
+
+/* Animations */
+@keyframes pulseIndicator {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--primary-color-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb), 0);
+  }
+}
+
+/* Media queries for responsive design */
+@media (max-width: 640px) {
+  .player-indicator {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+/* Accessibility improvements */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+body.dark-theme button:focus-visible,
+body.dark-theme input:focus-visible {
+  outline-color: var(--primary-color);
+}
+
+/* Button transitions */
+button {
+  transition: all var(--transition-normal);
+}
+
+/* Form validation styles */
+input:invalid {
+  border-color: var(--error);
+}
+
+.required::after {
+  content: '*';
+  color: var(--error);
+  margin-left: 0.25rem;
+}
+
+/* Helper text styles */
+.helper-text {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+  margin-top: 0.25rem;
+}
+
+.error-text {
+  font-size: 0.75rem;
+  color: var(--error);
+  margin-top: 0.25rem;
+}
+
+/* Remove default number input styles */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

@@ -1,5 +1,5 @@
 /* Importăm fonturi Google noi */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap");
 
 .App {
   text-align: center;
@@ -41,85 +41,125 @@
 }
 
 :root {
-  /* Paleta de culori îmbunătățită */
-  --primary-color: #5465ff;
-  --primary-hover: #4354eb;
-  --primary-light: #e0e4ff;
-  --primary-dark: #2e3a87;
-  --primary-gradient: linear-gradient(135deg, #5465ff 0%, #788bff 100%);
+  /* Improved color palette with better contrast and vibrance */
+  --primary-color: #4361ee;
+  --primary-hover: #3a56d4;
+  --primary-light: #eef2ff;
+  --primary-dark: #2541b2;
+  --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
 
-  --secondary-color: #ff9e2c;
-  --secondary-hover: #f88c00;
-  --secondary-light: #fff3e0;
-  --secondary-dark: #e67e00;
-  --secondary-gradient: linear-gradient(135deg, #ff9e2c 0%, #ffbb6e 100%);
+  --secondary-color: #f7b801;
+  --secondary-hover: #e3a800;
+  --secondary-light: #fff8e6;
+  --secondary-dark: #c18f00;
+  --secondary-gradient: linear-gradient(135deg, #f7b801 0%, #ffd54f 100%);
 
-  --accent-color: #00c2a8;
-  --accent-hover: #00a58e;
-  --accent-light: #e0fff9;
+  --accent-color: #06d6a0;
+  --accent-hover: #05c091;
+  --accent-light: #e6fff8;
+  --accent-dark: #049e75;
+  --accent-gradient: linear-gradient(135deg, #06d6a0 0%, #05c091 100%);
 
-  --neutral-50: #fafafa;
-  --neutral-100: #f4f4f5;
-  --neutral-200: #e4e4e7;
-  --neutral-300: #d4d4d8;
-  --neutral-400: #a1a1aa;
-  --neutral-500: #71717a;
-  --neutral-600: #52525b;
-  --neutral-700: #3f3f46;
-  --neutral-800: #27272a;
-  --neutral-900: #18181b;
+  /* Neutral palette */
+  --neutral-50: #f9fafb;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+  --neutral-950: #0d1424;
 
-  --success: #06d77b;
-  --error: #ff4e64;
-  --warning: #ff9e2c;
-  --info: #4699ff;
+  /* Semantic colors */
+  --success: #10b981;
+  --success-light: #ecfdf5;
+  --success-dark: #047857;
 
-  /* Spacing system */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
+  --error: #ef4444;
+  --error-light: #fef2f2;
+  --error-dark: #b91c1c;
+
+  --warning: #f59e0b;
+  --warning-light: #fffbeb;
+  --warning-dark: #b45309;
+
+  --info: #3b82f6;
+  --info-light: #eff6ff;
+  --info-dark: #1d4ed8;
+
+  /* Spacing system - more extensive */
+  --space-2xs: 0.125rem; /* 2px */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 1rem; /* 16px */
+  --space-lg: 1.5rem; /* 24px */
+  --space-xl: 2rem; /* 32px */
+  --space-2xl: 2.5rem; /* 40px */
+  --space-3xl: 3rem; /* 48px */
+  --space-4xl: 4rem; /* 64px */
 
   /* Border radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-xs: 0.125rem; /* 2px */
+  --radius-sm: 0.25rem; /* 4px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.75rem; /* 12px */
+  --radius-xl: 1rem; /* 16px */
+  --radius-2xl: 1.5rem; /* 24px */
   --radius-full: 9999px;
 
-  /* Shadows îmbunătățite */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  /* Better shadows with depth */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 
   /* Transitions */
-  --transition-fast: 150ms;
-  --transition-normal: 250ms;
-  --transition-slow: 350ms;
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Card styles */
   --card-bg: white;
+  --card-border: var(--neutral-200);
   --card-shadow: var(--shadow-md);
   --card-hover-shadow: var(--shadow-lg);
+  --card-radius: var(--radius-lg);
 
   /* Dark mode colors */
-  --dark-bg: #121826;
-  --dark-card-bg: #1e2538;
-  --dark-text: #f1f5f9;
-  --dark-text-secondary: #a3b1cc;
-  --dark-border: #2e3b52;
+  --dark-bg: var(--neutral-950);
+  --dark-card-bg: var(--neutral-900);
+  --dark-surface: var(--neutral-800);
+  --dark-border: var(--neutral-700);
+  --dark-text: var(--neutral-100);
+  --dark-text-secondary: var(--neutral-400);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-color: #788bff;
-    --primary-hover: #5465ff;
-    --primary-light: #1c2146;
-    --primary-dark: #c7d2fe;
+    --primary-color: #5d79ff;
+    --primary-hover: #4361ee;
+    --primary-light: #172160;
+    --primary-dark: #d1deff;
+
+    --secondary-color: #ffc43d;
+    --secondary-hover: #f7b801;
+    --secondary-light: #3d2e00;
+    --secondary-dark: #ffe7a8;
+
+    --accent-color: #06d6a0;
+    --accent-hover: #05c091;
+    --accent-light: #0a3d2e;
+    --accent-dark: #a8fff0;
   }
 
   body.dark-theme {
@@ -129,38 +169,44 @@
 
   body.dark-theme .card {
     background-color: var(--dark-card-bg);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+    border-color: var(--dark-border);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.35);
   }
 }
 
 body {
   margin: 0;
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--neutral-100);
   color: var(--neutral-800);
   line-height: 1.6;
   font-weight: 400;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
 }
 
-/* Îmbunătățiri pentru layout */
+/* Improved layout structures */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-md);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Card styles îmbunătățite */
+/* Better card styles */
 .card {
-  background-color: white;
-  border-radius: var(--radius-lg);
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: all var(--transition-normal);
+  border: 1px solid var(--card-border);
+  position: relative;
 }
 
 .card:hover {
@@ -168,7 +214,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Button styles îmbunătățite */
+/* Button styles with improved interaction */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -177,12 +223,15 @@ body {
   font-size: 0.875rem;
   font-weight: 600;
   border-radius: var(--radius-md);
-  transition: all 0.25s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  transition: all var(--transition-normal);
   cursor: pointer;
   position: relative;
   overflow: hidden;
   letter-spacing: 0.01em;
   border: none;
+  user-select: none;
+  text-decoration: none;
+  outline: none;
 }
 
 .btn::after {
