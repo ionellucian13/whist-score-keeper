@@ -113,15 +113,15 @@ const GameContent: React.FC = () => {
         
         {game && (
           <>
-            {gamePhase === GamePhase.Scoreboard && <Scoreboard />}
-            {gamePhase === GamePhase.Prediction && <PredictionPhase />}
-            {gamePhase === GamePhase.Tricks && <TricksPhase />}
-            {gamePhase === GamePhase.Complete && <GameComplete />}
+            {gamePhase === GamePhase.SCOREBOARD && <Scoreboard />}
+            {gamePhase === GamePhase.PREDICTION && <PredictionPhase />}
+            {gamePhase === GamePhase.TRICKS && <TricksPhase />}
+            {gamePhase === GamePhase.COMPLETE && <GameComplete />}
           </>
         )}
       </main>
       
-      {showRules && <RulesModal onClose={handleHideRules} />}
+      {showRules && <RulesModal isOpen={showRules} onClose={handleHideRules} />}
       
       {showConfirm && (
         <ConfirmModal
@@ -143,7 +143,7 @@ const App: React.FC = () => {
   return (
     <GameProvider>
       <div className="min-h-screen bg-neutral-100 dark:bg-dark-bg text-neutral-800 dark:text-dark-text flex flex-col transition-colors duration-300">
-        <Header onOpenRules={openRulesModal} />
+        <Header onShowRules={openRulesModal} />
         <main className="flex-grow py-4">
           <GameContent />
         </main>

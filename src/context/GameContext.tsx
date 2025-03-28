@@ -35,6 +35,7 @@ interface GameContextType {
   getRoundByNumber: (roundNumber: number) => Round | undefined;
   getPlayerCumulativeScore: (playerId: string, upToRound: number) => number;
   restartGameWithSamePlayers: () => void;
+  finishRound: (results: Record<string, number>) => void;
 }
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -343,6 +344,94 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const finishRound = (results: Record<string, number>) => {
+    if (!game || !currentRound) {
+      setError("Nu există un joc activ sau o rundă curentă");
+      return;
+    }
+
+    // Verifică dacă suma rezultatelor este egală cu numărul total de tricuri
+    const totalTricksWon = Object.values(results).reduce((sum, tricks) => sum + tricks, 0);
+    if (totalTricksWon !== currentRound.cardsPerPlayer) {
+      setError(`Suma mâinilor câștigate (${totalTricksWon}) trebuie să fie egală cu numărul total de mâini (${currentRound.cardsPerPlayer}).`);
+      return;
+    }
+
+    // Generează rezultatele pentru rundă
+    const roundResults: PlayerRoundResult[] = game.players.map(player => {
+      const prediction = currentRound.predictions?.[player.id] || 0;
+      const tricksWon = results[player.id] || 0;
+      const score = calculateScore(prediction, tricksWon);
+      
+      return {
+        playerId: player.id,
+        prediction,
+        tricksWon,
+        score,
+        hasReceivedConsecutiveBonus: false
+      };
+    });
+    
+    // Creăm un joc temporar cu runda curentă pentru a verifica bonusurile de consecvență
+    const tempRound: Round = {
+      ...currentRound,
+      results: roundResults
+    };
+    
+    const tempGame = {
+      ...game,
+      rounds: [...game.rounds, tempRound]
+    };
+    
+    // Actualizăm scorurile cu bonusuri de consecvență, dacă este cazul
+    const updatedResults = roundResults.map(result => {
+      const consecutiveCheck = checkConsecutiveRounds(tempGame, result.playerId);
+      
+      if (consecutiveCheck.bonus !== 0) {
+        return {
+          ...result,
+          consistencyBonus: consecutiveCheck.bonus,
+          hasReceivedConsecutiveBonus: true
+        };
+      }
+      
+      return result;
+    });
+    
+    // Adăugăm runda finalizată în istoricul jocului
+    const completeRound: Round = {
+      ...currentRound,
+      results: updatedResults
+    };
+    
+    const isLastRound = game.currentRound === game.totalRounds;
+    
+    // Actualizăm starea jocului
+    setGame(prevGame => {
+      if (!prevGame) return null;
+      
+      return {
+        ...prevGame,
+        rounds: [...prevGame.rounds, completeRound],
+        currentRound: isLastRound ? prevGame.currentRound : prevGame.currentRound + 1,
+        isComplete: isLastRound,
+        lastUpdated: new Date()
+      };
+    });
+    
+    // Resetăm starea curentă pentru runda următoare
+    setCurrentRoundPredictions(new Map());
+    setCurrentRoundTricks(new Map());
+    setCurrentRound(null);
+    
+    // Actualizăm faza jocului
+    if (isLastRound) {
+      setGamePhase(GamePhase.COMPLETE);
+    } else {
+      setGamePhase(GamePhase.PREDICTION);
+    }
+  };
+
   const value = {
     game,
     gamePhase,
@@ -364,7 +453,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     getPlayerById,
     getRoundByNumber,
     getPlayerCumulativeScore: getPlayerCumulativeScoreFunc,
-    restartGameWithSamePlayers
+    restartGameWithSamePlayers,
+    finishRound
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

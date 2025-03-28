@@ -5,10 +5,11 @@ import RulesModal from './RulesModal';
 import './Header.css';
 
 interface HeaderProps {
-  onOpenRules?: () => void;
+  onShowRules?: () => void;
+  onConfirm?: (message: string, action: () => void) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
+const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   const { game, gamePhase, resetGame } = useGameContext();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
@@ -33,7 +34,11 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
   }, [darkMode]);
   
   const handleResetClick = () => {
-    setShowResetConfirm(true);
+    if (onConfirm) {
+      onConfirm('Ești sigur că vrei să începi un joc nou? Toate datele curente vor fi pierdute.', resetGame);
+    } else {
+      setShowResetConfirm(true);
+    }
   };
   
   const confirmReset = () => {
@@ -46,9 +51,9 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
   };
   
   const openRulesModal = () => {
-    if (onOpenRules) {
+    if (onShowRules) {
       // Folosim prop-ul pentru a deschide modal-ul din părinte
-      onOpenRules();
+      onShowRules();
     } else {
       // Fallback la comportamentul original
       setShowRulesModal(true);
@@ -214,7 +219,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenRules }) => {
       )}
       
       {/* Renderează modal-ul doar dacă nu este gestionat de părinte */}
-      {!onOpenRules && <RulesModal isOpen={showRulesModal} onClose={closeRulesModal} />}
+      {!onShowRules && <RulesModal isOpen={showRulesModal} onClose={closeRulesModal} />}
     </header>
   );
 };

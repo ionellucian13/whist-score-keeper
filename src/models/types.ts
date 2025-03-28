@@ -10,6 +10,7 @@ export interface PlayerRoundResult {
   tricksWon: number;
   score: number;
   hasReceivedConsecutiveBonus?: boolean;
+  consistencyBonus?: number;
 }
 
 export interface Round {
@@ -18,6 +19,7 @@ export interface Round {
   totalTricks: number;
   dealerIndex: number;
   results: PlayerRoundResult[];
+  predictions?: Record<string, number>;
 }
 
 export interface Game {
