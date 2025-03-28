@@ -142,7 +142,7 @@ const Scoreboard: React.FC = () => {
               <div className="flex flex-col flex-grow">
                 <div className="flex items-center">
                   <div 
-                    className="w-3 h-3 rounded-full mr-2" 
+                    className="inline-block w-4 h-4 rounded-full mr-2" 
                     style={{ backgroundColor: player.color }}
                   ></div>
                   <div className="font-medium truncate">{player.name}</div>
@@ -195,7 +195,7 @@ const Scoreboard: React.FC = () => {
                         {playerRank}
                       </div>
                       <div 
-                        className="w-3 h-3 rounded-full mr-2" 
+                        className="inline-block w-4 h-4 rounded-full mr-2" 
                         style={{ backgroundColor: player.color }}
                       ></div>
                       <span>{player.name}</span>

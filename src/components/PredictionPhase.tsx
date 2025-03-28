@@ -160,7 +160,7 @@ const PredictionPhase: React.FC = () => {
               </div>
               
               {predictions[player.id] !== undefined && (
-                <div className="prediction-badge px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                <div className="prediction-badge ml-2 px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
                   Pariu: {predictions[player.id]}
                 </div>
               )}

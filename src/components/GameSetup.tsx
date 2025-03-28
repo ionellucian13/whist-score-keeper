@@ -132,7 +132,7 @@ const GameSetup: React.FC = () => {
           
           {playerNames.map((name, index) => (
             <div key={index} className="flex items-center gap-2">
-              <div className="player-indicator w-8 h-8 rounded-full" style={{ backgroundColor: DEFAULT_GAME_SETTINGS.playerColors[index % DEFAULT_GAME_SETTINGS.playerColors.length] }}>
+              <div className="player-indicator w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: DEFAULT_GAME_SETTINGS.playerColors[index % DEFAULT_GAME_SETTINGS.playerColors.length] }}>
                 <span className="font-bold text-white">{index + 1}</span>
               </div>
               <input
@@ -186,7 +186,7 @@ const GameSetup: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center mb-2">
-                  <div className={`game-type-indicator w-4 h-4 rounded-full mr-2 ${gameType === type ? 'bg-indigo-600' : 'bg-gray-200'}`}>
+                  <div className={`game-type-indicator inline-block w-4 h-4 rounded-full mr-2 ${gameType === type ? 'bg-indigo-600' : 'bg-gray-200'}`}>
                     <span></span>
                   </div>
                   <span className="font-medium">

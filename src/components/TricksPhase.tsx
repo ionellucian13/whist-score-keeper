@@ -238,12 +238,12 @@ const TricksPhase: React.FC = () => {
               <div className="flex items-center justify-between mb-3">
                 <div className="player-info flex items-center">
                   <span 
-                    className="inline-block w-3 h-3 rounded-full mr-2" 
+                    className="inline-block w-4 h-4 rounded-full mr-2" 
                     style={{ backgroundColor: player.color }}
                   ></span>
                   <span className="font-medium">{player.name}</span>
                   {isDealer(player.id) && (
-                    <span className="ml-2 text-sm text-red-600">(Dealer)</span>
+                    <span className="dealer-badge ml-2 text-sm px-2 py-0.5 bg-red-50 text-red-600 rounded-full border border-red-200">(Dealer)</span>
                   )}
                 </div>
                 
@@ -253,7 +253,7 @@ const TricksPhase: React.FC = () => {
                   </span>
                   
                   {playerTricks > 0 && 
-                    <span className={`px-2 py-1 text-xs rounded-full ${
+                    <span className={`prediction-badge px-2 py-1 text-xs rounded-full ${
                       isPredictionCorrect(player.id) 
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-red-100 text-red-800'
