@@ -411,4 +411,31 @@ export const _testMediumGame = () => {
   }
   
   console.groupEnd();
+};
+
+// Sortează jucătorii după scorul total
+export const getSortedPlayersByScore = (game: Game): { player: Player; score: number }[] => {
+  if (!game || !game.players || !game.rounds) {
+    return [];
+  }
+
+  return game.players.map(player => {
+    // Calculăm scorul total pentru jucător din toate rundele
+    let totalScore = 0;
+    game.rounds.forEach(round => {
+      const playerResult = round.results.find(result => result.playerId === player.id);
+      if (playerResult) {
+        totalScore += playerResult.score;
+        // Adăugăm și bonusurile pentru consistență dacă există
+        if (playerResult.consistencyBonus) {
+          totalScore += playerResult.consistencyBonus;
+        }
+      }
+    });
+
+    return {
+      player,
+      score: totalScore
+    };
+  }).sort((a, b) => b.score - a.score); // Sortăm descrescător după scor
 }; 
