@@ -38,6 +38,7 @@ export interface GameSettings {
   playerColors: string[];
 }
 
+/* eslint-disable no-unused-vars */
 export enum GamePhase {
   SETUP = "setup",
   PREDICTION = "prediction",
@@ -55,4 +56,5 @@ export enum ConsecutiveStreakType {
   NONE = 'none',
   CORRECT = 'correct',
   INCORRECT = 'incorrect'
-} 
+}
+/* eslint-enable no-unused-vars */ 

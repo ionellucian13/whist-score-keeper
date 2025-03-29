@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../context/GameContext';
 import { GameType } from '../models/types';
-import { calculateTotalRounds } from '../utils/gameUtils';
 import { DEFAULT_GAME_SETTINGS } from '../utils/gameUtils';
 
 const GameSetup: React.FC = () => {
