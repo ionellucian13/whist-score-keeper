@@ -2,17 +2,249 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles below */
+/* Global CSS Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Font Import */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap");
+
+/* Root Variables */
+:root {
+  /* Animation Delays */
+  --delay-100: 100ms;
+  --delay-200: 200ms;
+  --delay-300: 300ms;
+  --delay-400: 400ms;
+  --delay-500: 500ms;
+
+  /* Focus Outline */
+  --focus-ring-color: rgba(59, 130, 246, 0.5);
+  --focus-ring-offset: 2px;
+
+  /* Form Controls */
+  --input-height: 2.75rem;
+  --input-height-sm: 2.25rem;
+  --input-height-lg: 3.25rem;
+
+  /* Miscellaneous */
+  --scrollbar-size: 8px;
+  --scrollbar-track-color: rgba(0, 0, 0, 0.05);
+  --scrollbar-thumb-color: rgba(0, 0, 0, 0.2);
+
+  /* Media Query Breakpoints */
+  --mobile: 640px;
+  --tablet: 768px;
+  --laptop: 1024px;
+  --desktop: 1280px;
+
+  /* Touch Target Size (for accessibility) */
+  --min-touch-target: 44px;
+}
+
+/* Body Default Styles */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  scroll-behavior: smooth;
 }
 
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Code Style */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox Scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+}
+
+/* Form Element Focus Styles */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-color);
+}
+
+/* Animation utility classes */
+.animate-delay-100 {
+  animation-delay: var(--delay-100);
+}
+
+.animate-delay-200 {
+  animation-delay: var(--delay-200);
+}
+
+.animate-delay-300 {
+  animation-delay: var(--delay-300);
+}
+
+.animate-delay-400 {
+  animation-delay: var(--delay-400);
+}
+
+.animate-delay-500 {
+  animation-delay: var(--delay-500);
+}
+
+/* Added touch-friendly targets for mobile devices */
+@media (pointer: coarse) {
+  button,
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="button"],
+  select,
+  a {
+    min-height: var(--min-touch-target);
+    min-width: var(--min-touch-target);
+  }
+
+  label {
+    padding: calc((var(--min-touch-target) - 1.5rem) / 2);
+  }
+}
+
+/* Better focus indicators for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom animations */
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.3s ease-out;
+}
+
+.animate-fade-slide-up {
+  animation: fadeSlideUp 0.4s ease-out;
+}
+
+.animate-fade-slide-down {
+  animation: fadeSlideDown 0.4s ease-out;
+}
+
+.animate-fade-slide-left {
+  animation: fadeSlideLeft 0.4s ease-out;
+}
+
+.animate-fade-slide-right {
+  animation: fadeSlideRight 0.4s ease-out;
 }

@@ -14,11 +14,11 @@ const PlayPhase: React.FC = () => {
 
   if (!game || !currentRound) {
     return (
-      <div className="flex justify-center items-center h-48">
-        <div className="animate-pulse flex space-x-2">
+      <div className="flex-center h-48">
+        <div className="animate-pulse flex space-x-3">
           <div className="h-3 w-3 bg-primary-color rounded-full"></div>
-          <div className="h-3 w-3 bg-primary-color rounded-full"></div>
-          <div className="h-3 w-3 bg-primary-color rounded-full"></div>
+          <div className="h-3 w-3 bg-primary-color rounded-full animate-delay-100"></div>
+          <div className="h-3 w-3 bg-primary-color rounded-full animate-delay-200"></div>
         </div>
       </div>
     );
@@ -56,56 +56,71 @@ const PlayPhase: React.FC = () => {
   const maxTricks = currentRound.cardsPerPlayer;
 
   return (
-    <div className="card bg-app-surface shadow-app-elevation-2 rounded-radius-xl overflow-hidden">
+    <div className="card bg-app-surface shadow-app-elevation-3 animate-fade-in">
       <div className="p-6">
         <header className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="inline-flex items-center justify-center p-2 mr-3 rounded-full bg-success-surface text-success-color">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center mb-4 sm:mb-0">
+              <div className="inline-flex items-center justify-center p-2 mr-3 rounded-full bg-success-surface text-success-color shadow-1">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-app-text-primary">
+                <h2 className="text-xl sm:text-2xl font-bold text-app-text-primary flex items-center">
                   Runda {currentRound.roundNumber}
+                  <span className="ml-2 px-2 py-0.5 bg-primary-surface text-primary-color text-sm rounded-full">
+                    {currentRound.cardsPerPlayer} cărți
+                  </span>
                 </h2>
-                <p className="text-app-text-secondary">Înregistrează rezultatele: {currentRound.cardsPerPlayer} mâini</p>
+                <p className="text-sm sm:text-base text-app-text-secondary mt-1">Înregistrează rezultatele obținute</p>
               </div>
             </div>
             
-            <div className="hidden md:flex items-center">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-success-color text-white font-medium text-lg">
+            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto">
+              <div className="sm:hidden prediction-progress flex-1 mr-4">
+                <div className="text-right mb-1 text-xs text-app-text-tertiary">
+                  {Object.keys(results).length}/{game.players.length} jucători
+                </div>
+                <div className="h-2 bg-app-surface-hover rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-success-color transition-all duration-300 ease-out"
+                    style={{ width: `${resultsProgress}%` }}
+                  ></div>
+                </div>
+              </div>
+              
+              <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-success-color text-white font-medium text-lg shadow-2">
                 {currentRound.cardsPerPlayer}
               </div>
             </div>
           </div>
         </header>
 
-        <div className="dealer-info mb-6 flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="dealer-avatar relative w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-warning-400 to-warning-600 text-white shadow-md mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-              </svg>
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-app-surface rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-warning-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+        <div className="dealer-info mb-5 p-3 rounded-lg bg-app-surface-hover border border-app-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="dealer-avatar relative w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-warning-400 to-warning-600 text-white shadow-md mr-3 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                 </svg>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-app-surface rounded-full flex items-center justify-center shadow-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-warning-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <p className="text-app-text-tertiary text-xs">Dealer în această rundă</p>
+                <p className="text-app-text-primary font-semibold">{game.players[currentRound.dealerIndex].name}</p>
               </div>
             </div>
-            <div>
-              <p className="text-app-text-tertiary text-sm">Dealer</p>
-              <p className="text-app-text-primary font-semibold">{game.players[currentRound.dealerIndex].name}</p>
-            </div>
-          </div>
-          
-          <div className="hidden md:block">
-            <div className="prediction-progress">
-              <div className="text-right mb-1 text-sm text-app-text-tertiary">
-                Rezultate: {Object.keys(results).length}/{game.players.length}
+            
+            <div className="hidden sm:block prediction-progress w-36">
+              <div className="text-right mb-1 text-xs text-app-text-tertiary">
+                {Object.keys(results).length}/{game.players.length} jucători
               </div>
-              <div className="w-36 h-2 bg-app-surface-hover rounded-full overflow-hidden">
+              <div className="h-2 bg-app-surface rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-success-color transition-all duration-300 ease-out"
                   style={{ width: `${resultsProgress}%` }}
@@ -132,51 +147,59 @@ const PlayPhase: React.FC = () => {
             {game.players.map((player: Player) => {
               const prediction = currentRound.predictions?.[player.id] || 0;
               const result = results[player.id] !== undefined ? results[player.id] : "";
-              const score = result !== "" 
-                ? (result === prediction ? 10 + result * 2 : 0 - Math.abs(prediction - (result as number)) * 2)
+              const scoreValue = result !== "" 
+                ? (result === prediction ? 5 + result * 2 : 0 - Math.abs(prediction - (result as number)) * 2)
                 : null;
                 
               return (
                 <div 
                   key={player.id} 
-                  className="player-result p-4 rounded-xl border border-app-border bg-app-surface-hover"
+                  className={`player-result p-4 rounded-xl border transition-all ${
+                    result !== "" 
+                      ? result === prediction 
+                        ? 'border-success-color bg-success-surface/20' 
+                        : 'border-error-color bg-error-surface/20'
+                      : 'border-app-border bg-app-surface-hover'
+                  }`}
                 >
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <div className="player-identity flex items-center mb-3 md:mb-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div className="player-identity flex items-center mb-4 sm:mb-0">
                       <div 
-                        className="w-10 h-10 rounded-full mr-3 flex-shrink-0" 
+                        className="w-11 h-11 rounded-full mr-3 flex-shrink-0 ring-2 ring-app-border dark:ring-opacity-30" 
                         style={{ backgroundColor: player.color }}
                       ></div>
                       <div>
-                        <h3 className="font-medium text-app-text-primary">{player.name}</h3>
-                        <div className="flex items-center mt-1">
-                          <div className="prediction-badge px-2 py-0.5 rounded bg-primary-surface text-primary-color text-sm mr-3">
-                            <span className="font-medium">Predicție: {prediction}</span>
+                        <h3 className="font-semibold text-app-text-primary">{player.name}</h3>
+                        <div className="flex items-center mt-1 flex-wrap gap-2">
+                          <div className="badge badge-primary">
+                            <span>Predicție: {prediction}</span>
                           </div>
                           
-                          {score !== null && (
-                            <div className={`score-badge px-2 py-0.5 rounded text-sm ${
-                              score > 0 
-                                ? 'bg-success-surface text-success-color' 
-                                : 'bg-error-surface text-error-color'
+                          {scoreValue !== null && (
+                            <div className={`badge ${
+                              scoreValue > 0 
+                                ? 'badge-success' 
+                                : 'badge-error'
                             }`}>
-                              <span className="font-medium">Scor: {score}</span>
+                              <span>Scor: {scoreValue}</span>
                             </div>
                           )}
                         </div>
                       </div>
                     </div>
                     
-                    <div className="result-selector flex items-center">
-                      <span className="text-app-text-secondary mr-3 whitespace-nowrap">Tricuri câștigate:</span>
-                      <div className="result-buttons grid grid-cols-6 sm:grid-cols-8 gap-2">
+                    <div className="result-selector">
+                      <div className="text-center sm:text-right mb-2 text-sm text-app-text-secondary">
+                        Tricuri câștigate:
+                      </div>
+                      <div className="result-buttons grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
                         {Array.from({ length: maxTricks + 1 }, (_, i) => i).map((value) => (
                           <button
                             key={value}
-                            className={`btn-result w-8 h-8 rounded-lg transition-all focus:outline-none ${
+                            className={`w-10 h-10 rounded-lg transition-all focus:outline-none text-base ${
                               results[player.id] === value
-                                ? 'bg-success-color text-white' 
-                                : 'bg-app-surface text-app-text-primary hover:bg-app-surface-hover active:bg-app-surface-active'
+                                ? 'bg-success-color text-white shadow-[0_0_10px_rgba(16,185,129,0.5)]' 
+                                : 'bg-app-surface text-app-text-primary hover:bg-app-surface-hover active:bg-app-surface-active shadow-1'
                             }`}
                             onClick={() => handleResultChange(player.id, value)}
                           >
@@ -193,7 +216,7 @@ const PlayPhase: React.FC = () => {
         </div>
         
         {error && (
-          <div className="error-message p-4 mb-6 bg-error-surface text-error-color rounded-lg border border-error-border flex items-center fade-in">
+          <div className="error-message p-4 mb-6 bg-error-surface text-error-color rounded-lg border border-error-border flex items-center animate-fade-in">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
@@ -201,36 +224,16 @@ const PlayPhase: React.FC = () => {
           </div>
         )}
         
-        <div className="flex items-center justify-between">
-          <div className="md:hidden">
-            <div className="result-progress">
-              <div className="text-sm text-app-text-tertiary mb-1">
-                Rezultate: {Object.keys(results).length}/{game.players.length}
-              </div>
-              <div className="w-28 h-2 bg-app-surface-hover rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-success-color transition-all duration-300 ease-out"
-                  style={{ width: `${resultsProgress}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-          
+        <div className="flex justify-end">
           <button
-            className={`btn btn-success py-2.5 px-4 rounded-lg transition-all ${
-              Object.keys(results).length !== game.players.length
-                ? 'opacity-50 cursor-not-allowed'
-                : 'hover:shadow-md'
-            }`}
             onClick={handleSubmit}
+            className="btn btn-success flex items-center px-6"
             disabled={Object.keys(results).length !== game.players.length}
           >
-            <div className="flex items-center">
-              <span>Finalizează runda</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1.5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            Finalizează runda
           </button>
         </div>
       </div>

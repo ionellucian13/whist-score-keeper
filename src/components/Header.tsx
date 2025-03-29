@@ -5,33 +5,45 @@ import RulesModal from './RulesModal';
 import './Header.css';
 
 interface HeaderProps {
-  onShowRules?: () => void;
-  onConfirm?: (message: string, action: () => void) => void;
+  onShowRules: () => void;
+  onConfirm: (message: string, action: () => void) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
-  const { game, gamePhase, resetGame } = useGameContext();
+  const { game, gamePhase, setGamePhase, resetGame } = useGameContext();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    // Verifică preferința salvată sau preferința sistemului
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme === 'dark';
-    }
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [showPhaseSelector, setShowPhaseSelector] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
   
-  // Aplică tema când se schimbă
+  // Verificăm preferințele utilizatorului pentru tema întunecată
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-theme');
-      localStorage.setItem('theme', 'dark');
+    // Verificăm dacă există o preferință salvată în localStorage
+    const savedTheme = localStorage.getItem('darkMode');
+    
+    if (savedTheme) {
+      // Dacă există o preferință salvată, o aplicăm
+      setIsDarkMode(savedTheme === 'true');
+      document.body.classList.toggle('dark-theme', savedTheme === 'true');
     } else {
-      document.body.classList.remove('dark-theme');
-      localStorage.setItem('theme', 'light');
+      // Altfel, folosim preferința sistemului
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(prefersDark);
+      document.body.classList.toggle('dark-theme', prefersDark);
     }
-  }, [darkMode]);
+    
+    // Adăugăm un ascultător pentru a detecta scrollul și a aplica o clasă
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   
   const handleResetClick = () => {
     if (onConfirm) {
@@ -64,9 +76,50 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
     setShowRulesModal(false);
   };
   
-  // Toggle dark mode
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
+  // Toggle tema între light și dark
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    document.body.classList.toggle('dark-theme', newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+  };
+  
+  // Toggle dropdown pentru acțiuni
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+    setShowPhaseSelector(false);
+  };
+  
+  // Toggle selector pentru faze
+  const togglePhaseSelector = () => {
+    setShowPhaseSelector(!showPhaseSelector);
+    setShowDropdown(false);
+  };
+  
+  // Închide dropdowns când se face click în altă parte
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      if (!target.closest('.phase-dropdown') && !target.closest('.phase-button')) {
+        setShowPhaseSelector(false);
+      }
+      
+      if (!target.closest('.action-dropdown') && !target.closest('.action-button')) {
+        setShowDropdown(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  // Schimbă faza jocului
+  const changeGamePhase = (phase: GamePhase) => {
+    setGamePhase(phase);
+    setShowPhaseSelector(false);
   };
   
   // Determină textul pentru tipul de joc
@@ -91,24 +144,35 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
     return Math.min(100, Math.round((game.currentRound / game.totalRounds) * 100));
   };
   
-  // Determină textul pentru faza curentă
-  const getPhaseText = () => {
+  // Obține numele fazei curente pentru afișare
+  const getCurrentPhaseName = () => {
     switch (gamePhase) {
       case GamePhase.PREDICTION:
-        return 'Faza de Predicție';
+        return 'Predicții';
       case GamePhase.TRICKS:
-        return 'Faza de Mâini';
-      case GamePhase.COMPLETE:
-        return 'Joc Finalizat';
+        return 'Rezultate';
       case GamePhase.SCOREBOARD:
-        return 'Tabela de Scor';
+        return 'Clasament';
+      case GamePhase.COMPLETE:
+        return 'Finalizat';
       default:
-        return '';
+        return 'Setare';
     }
   };
   
+  // Handler pentru resetarea jocului cu confirmare
+  const handleResetGame = () => {
+    onConfirm(
+      'Ești sigur că vrei să resetezi jocul? Toate datele vor fi pierdute.',
+      () => {
+        resetGame();
+        setShowDropdown(false);
+      }
+    );
+  };
+  
   return (
-    <header className="app-header">
+    <header className={`app-header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="header-content">
         <h1 className="logo">
           <span className="card-icon-wrapper">
@@ -151,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
                     </div>
                   </div>
                   <div className="phase-badge" data-phase={gamePhase.toLowerCase()}>
-                    {getPhaseText()}
+                    {getCurrentPhaseName()}
                   </div>
                 </>
               ) : (
@@ -164,11 +228,11 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
       
       <div className="header-actions">
         <button 
-          onClick={toggleTheme} 
+          onClick={toggleDarkMode} 
           className="theme-toggle"
-          aria-label={darkMode ? 'Comută la tema luminoasă' : 'Comută la tema întunecată'}
+          aria-label={isDarkMode ? 'Comută la tema luminoasă' : 'Comută la tema întunecată'}
         >
-          {darkMode ? (
+          {isDarkMode ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
             </svg>
@@ -187,7 +251,7 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
         </button>
         
         {gamePhase !== GamePhase.SETUP && (
-          <button onClick={handleResetClick} className="reset-button">
+          <button onClick={handleResetGame} className="reset-button">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
             </svg>

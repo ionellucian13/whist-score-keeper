@@ -9,6 +9,7 @@
  * - Raze de bordură
  * - Opacitate
  * - Tranziții
+ * - Media queries
  */
 
 :root {
@@ -199,8 +200,11 @@
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ======== TIPOGRAFIE ======== */
-  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-family-headings: "Montserrat", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
   --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 
@@ -240,12 +244,37 @@
   --z-50: 50;
   --z-auto: auto;
 
+  /* ======== DIMENSIUNI BREAKPOINTS ======== */
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
   /* ======== DIMENSIUNI CONTAINER ======== */
   --container-max-width-sm: 640px;
   --container-max-width-md: 768px;
   --container-max-width-lg: 1024px;
   --container-max-width-xl: 1280px;
   --container-max-width-2xl: 1536px;
+
+  /* ======== GRID LAYOUT ======== */
+  --grid-gap-small: var(--spacing-2);
+  --grid-gap-medium: var(--spacing-4);
+  --grid-gap-large: var(--spacing-6);
+
+  /* ======== DIMENSIUNI COMPONENTE ======== */
+  --header-height: 64px;
+  --header-height-mobile: 56px;
+  --footer-height: 48px;
+  --card-border-radius: var(--radius-xl);
+  --button-height: 44px;
+  --button-height-sm: 36px;
+  --button-height-lg: 52px;
+  --input-height: 44px;
+  --input-height-sm: 36px;
+  --input-height-lg: 52px;
 }
 
 /* Setări pentru mod întunecat */
@@ -261,26 +290,26 @@
     --success-color: var(--success-400);
     --success-hover: var(--success-300);
     --success-active: var(--success-200);
-    --success-surface: rgba(14, 122, 41, 0.25);
-    --success-border: rgba(92, 204, 125, 0.4);
+    --success-surface: rgba(16, 185, 129, 0.15);
+    --success-border: rgba(16, 185, 129, 0.3);
 
     --warning-color: var(--warning-400);
     --warning-hover: var(--warning-300);
     --warning-active: var(--warning-200);
-    --warning-surface: rgba(135, 90, 14, 0.25);
-    --warning-border: rgba(219, 151, 61, 0.4);
+    --warning-surface: rgba(245, 158, 11, 0.15);
+    --warning-border: rgba(245, 158, 11, 0.3);
 
     --error-color: var(--error-400);
     --error-hover: var(--error-300);
     --error-active: var(--error-200);
-    --error-surface: rgba(135, 14, 26, 0.25);
-    --error-border: rgba(219, 61, 74, 0.4);
+    --error-surface: rgba(239, 68, 68, 0.15);
+    --error-border: rgba(239, 68, 68, 0.3);
 
     --info-color: var(--info-400);
     --info-hover: var(--info-300);
     --info-active: var(--info-200);
-    --info-surface: rgba(14, 75, 135, 0.25);
-    --info-border: rgba(61, 140, 219, 0.4);
+    --info-surface: rgba(59, 130, 246, 0.15);
+    --info-border: rgba(59, 130, 246, 0.3);
 
     /* ======== INTERFAȚĂ APLICAȚIE - MOD ÎNTUNECAT ======== */
     --app-background: var(--neutral-950);
@@ -288,9 +317,10 @@
     --app-surface-hover: var(--neutral-800);
     --app-surface-active: var(--neutral-700);
 
-    --app-border: var(--neutral-700);
+    --app-border: var(--neutral-800);
+    --app-border-focus: var(--primary-300);
 
-    --app-text-primary: var(--neutral-50);
+    --app-text-primary: var(--neutral-100);
     --app-text-secondary: var(--neutral-300);
     --app-text-tertiary: var(--neutral-500);
     --app-text-disabled: var(--neutral-600);
@@ -301,48 +331,62 @@
     --app-icon-tertiary: var(--neutral-600);
 
     /* ======== UMBRE - MOD ÎNTUNECAT ======== */
-    --app-elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --app-elevation-2: 0 1px 3px 0 rgba(0, 0, 0, 0.4),
-      0 1px 2px -1px rgba(0, 0, 0, 0.4);
-    --app-elevation-3: 0 4px 6px -1px rgba(0, 0, 0, 0.5),
-      0 2px 4px -2px rgba(0, 0, 0, 0.5);
-    --app-elevation-4: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
-      0 4px 6px -4px rgba(0, 0, 0, 0.5);
-    --app-elevation-5: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
-      0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    --app-elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+    --app-elevation-2: 0 1px 5px 0 rgba(0, 0, 0, 0.4),
+      0 1px 3px 0 rgba(0, 0, 0, 0.3);
+    --app-elevation-3: 0 4px 10px -1px rgba(0, 0, 0, 0.5),
+      0 2px 5px -1px rgba(0, 0, 0, 0.4);
+    --app-elevation-4: 0 10px 20px -3px rgba(0, 0, 0, 0.6),
+      0 4px 8px -2px rgba(0, 0, 0, 0.5);
+    --app-elevation-5: 0 20px 30px -5px rgba(0, 0, 0, 0.7),
+      0 8px 15px -6px rgba(0, 0, 0, 0.6);
   }
 }
 
-/* ======== CLASE UTILITARE ======== */
-
-/* Card */
+/* Card Component Styles */
 .card {
   background-color: var(--app-surface);
-  border-radius: var(--radius-xl);
+  border-radius: var(--card-border-radius);
   box-shadow: var(--app-elevation-2);
+  border: 1px solid var(--app-border);
   overflow: hidden;
+  transition: all var(--transition-300) var(--ease-out);
 }
 
-/* Butoane */
+.card:hover {
+  box-shadow: var(--app-elevation-3);
+  transform: translateY(-2px);
+}
+
+/* Button Component Styles */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-lg);
   padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
   transition: all var(--transition-200) var(--ease-out);
   cursor: pointer;
+  height: var(--button-height);
+  border: none;
+  text-align: center;
+  user-select: none;
+  position: relative;
+  text-decoration: none;
+  overflow: hidden;
 }
 
 .btn:disabled {
-  opacity: var(--opacity-50);
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .btn-primary {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--app-text-inverse);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -355,7 +399,7 @@
 
 .btn-success {
   background-color: var(--success-color);
-  color: white;
+  color: var(--app-text-inverse);
 }
 
 .btn-success:hover:not(:disabled) {
@@ -368,7 +412,7 @@
 
 .btn-warning {
   background-color: var(--warning-color);
-  color: white;
+  color: var(--app-text-inverse);
 }
 
 .btn-warning:hover:not(:disabled) {
@@ -381,7 +425,7 @@
 
 .btn-error {
   background-color: var(--error-color);
-  color: white;
+  color: var(--app-text-inverse);
 }
 
 .btn-error:hover:not(:disabled) {
@@ -400,10 +444,105 @@
 
 .btn-outline:hover:not(:disabled) {
   background-color: var(--app-surface-hover);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .btn-outline:active:not(:disabled) {
   background-color: var(--app-surface-active);
+}
+
+.btn-sm {
+  height: var(--button-height-sm);
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+}
+
+.btn-lg {
+  height: var(--button-height-lg);
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-xl);
+}
+
+/* Badge Component Styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--spacing-2);
+  height: 20px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badge-primary {
+  background-color: var(--primary-surface);
+  color: var(--primary-color);
+}
+
+.badge-success {
+  background-color: var(--success-surface);
+  color: var(--success-color);
+}
+
+.badge-warning {
+  background-color: var(--warning-surface);
+  color: var(--warning-color);
+}
+
+.badge-error {
+  background-color: var(--error-surface);
+  color: var(--error-color);
+}
+
+.badge-info {
+  background-color: var(--info-surface);
+  color: var(--info-color);
+}
+
+/* Input Component Styles */
+.input {
+  display: block;
+  width: 100%;
+  height: var(--input-height);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--radius-lg);
+  color: var(--app-text-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  transition: border-color var(--transition-200),
+    box-shadow var(--transition-200);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-surface);
+}
+
+.input::placeholder {
+  color: var(--app-text-tertiary);
+}
+
+.input-sm {
+  height: var(--input-height-sm);
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+}
+
+.input-lg {
+  height: var(--input-height-lg);
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-xl);
 }
 
 /* Animații și tranziții */
@@ -426,11 +565,70 @@
   transform: scale(1.02);
 }
 
+.scale-in {
+  animation: scaleIn var(--transition-300) var(--ease-out);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.slide-up {
+  animation: slideUp var(--transition-500) var(--ease-out);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-8));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Alte clase utilitare */
 .text-ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Flex utilities */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Grid utilities */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--grid-gap-medium);
 }
 
 /* Responsive containers */
@@ -446,11 +644,19 @@
   .container {
     max-width: var(--container-max-width-sm);
   }
+
+  :root {
+    --card-border-radius: var(--radius-xl);
+  }
 }
 
 @media (min-width: 768px) {
   .container {
     max-width: var(--container-max-width-md);
+  }
+
+  .grid-responsive {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
@@ -458,10 +664,86 @@
   .container {
     max-width: var(--container-max-width-lg);
   }
+
+  .grid-responsive {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
 }
 
 @media (min-width: 1280px) {
   .container {
     max-width: var(--container-max-width-xl);
+  }
+}
+
+/* Responsive text utilities */
+@media (max-width: 640px) {
+  .text-mobile-sm {
+    font-size: var(--font-size-sm);
+  }
+
+  .text-mobile-xs {
+    font-size: var(--font-size-xs);
+  }
+
+  .hide-on-mobile {
+    display: none;
+  }
+}
+
+/* Accessibility improvements */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--app-surface-hover);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--app-text-tertiary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--app-text-secondary);
+}
+
+/* Touch-friendly targets */
+@media (pointer: coarse) {
+  .btn,
+  .input,
+  input[type="radio"],
+  input[type="checkbox"],
+  select,
+  a {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
