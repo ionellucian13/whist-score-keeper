@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useGameContext } from '../contexts/GameContext';
+import React, { useState, useEffect, useContext } from 'react';
+import { GameContext } from '../context/GameContext';
 import { GamePhase, GameType } from '../models/types';
 import RulesModal from './RulesModal';
 import './Header.css';
-import { resetGame } from '../utils/gameUtils';
 
 interface HeaderProps {
   onShowRules: () => void;
@@ -11,7 +10,14 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
-  const { gameState, dispatch } = useGameContext();
+  const gameContext = useContext(GameContext);
+  
+  if (!gameContext) {
+    throw new Error('Header must be used within a GameProvider');
+  }
+  
+  const { game, gamePhase, resetGame } = gameContext;
+  
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -53,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   
   const handleReset = () => {
     if (window.confirm("Ești sigur că vrei să începi un joc nou?")) {
-      resetGame(gameState, dispatch);
+      resetGame();
     }
   };
   
@@ -117,20 +123,22 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   
   // Schimbă faza jocului
   const changeGamePhase = (phase: GamePhase) => {
-    // Implement the logic to change the game phase
+    if (gameContext.setGamePhase) {
+      gameContext.setGamePhase(phase);
+    }
   };
   
   // Determină textul pentru tipul de joc
   const getGameTypeText = () => {
-    if (!gameState?.gameType) return '';
+    if (!game?.gameType) return '';
     
-    switch (gameState.gameType) {
+    switch (game.gameType) {
       case GameType.SHORT:
         return 'Joc Scurt (8 runde)';
       case GameType.MEDIUM:
-        return `Joc Mediu (${2 * gameState.players.length + 7} runde)`;
+        return `Joc Mediu (${2 * game.players.length + 7} runde)`;
       case GameType.LONG:
-        return `Joc Lung (${3 * gameState.players.length + 12} runde)`;
+        return `Joc Lung (${3 * game.players.length + 12} runde)`;
       default:
         return '';
     }
@@ -138,13 +146,13 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   
   // Calculează progresul jocului
   const getGameProgress = (): number => {
-    if (!gameState) return 0;
-    return Math.min(100, Math.round((gameState.currentRound / gameState.totalRounds) * 100));
+    if (!game) return 0;
+    return Math.min(100, Math.round((game.currentRound / game.totalRounds) * 100));
   };
   
   // Obține numele fazei curente pentru afișare
   const getCurrentPhaseName = () => {
-    switch (gameState?.gamePhase) {
+    switch (gamePhase) {
       case GamePhase.PREDICTION:
         return 'Predicții';
       case GamePhase.TRICKS:
@@ -163,7 +171,7 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
     onConfirm(
       'Ești sigur că vrei să resetezi jocul? Toate datele vor fi pierdute.',
       () => {
-        resetGame(gameState, dispatch);
+        resetGame();
         setShowDropdown(false);
       }
     );
@@ -248,9 +256,8 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
           </div>
         </div>
       )}
-      
-      {/* Renderează modal-ul doar dacă nu este gestionat de părinte */}
-      {!onShowRules && <RulesModal isOpen={showRulesModal} onClose={closeRulesModal} />}
+     
+      {showRulesModal && <RulesModal isOpen={showRulesModal} onClose={closeRulesModal} />}
     </header>
   );
 };

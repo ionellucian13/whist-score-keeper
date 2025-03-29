@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useGameContext } from '../contexts/GameContext';
+import { useContext } from 'react';
+import { GameContext } from '../context/GameContext';
 import { GameType, GamePhase, Player } from '../models/types';
-import { setupGame } from '../utils/gameUtils';
 import '../styles/GameSetup.css';
 
 const MAX_PLAYERS = 6;
@@ -16,11 +16,18 @@ const DEFAULT_PLAYER_COLORS = [
 ];
 
 const GameSetup: React.FC = () => {
-  const { gameState, dispatch } = useGameContext();
+  const gameContext = useContext(GameContext);
+  
+  if (!gameContext) {
+    throw new Error('GameSetup must be used within a GameProvider');
+  }
+  
+  const { startGame } = gameContext;
+  
   const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: '', color: DEFAULT_PLAYER_COLORS[0] },
-    { id: 2, name: '', color: DEFAULT_PLAYER_COLORS[1] },
-    { id: 3, name: '', color: DEFAULT_PLAYER_COLORS[2] },
+    { id: '1', name: '', color: DEFAULT_PLAYER_COLORS[0] },
+    { id: '2', name: '', color: DEFAULT_PLAYER_COLORS[1] },
+    { id: '3', name: '', color: DEFAULT_PLAYER_COLORS[2] },
   ]);
   const [gameType, setGameType] = useState<GameType>(GameType.MEDIUM);
   const [formError, setFormError] = useState('');
@@ -53,7 +60,7 @@ const GameSetup: React.FC = () => {
     setIsFormValid(true);
   }, [players, gameType]);
 
-  const handlePlayerNameChange = (id: number, name: string) => {
+  const handlePlayerNameChange = (id: string, name: string) => {
     setPlayers(
       players.map(player => (player.id === id ? { ...player, name } : player))
     );
@@ -61,7 +68,8 @@ const GameSetup: React.FC = () => {
 
   const addPlayer = () => {
     if (players.length < MAX_PLAYERS) {
-      const newId = Math.max(...players.map(p => p.id)) + 1;
+      const numericIds = players.map(p => parseInt(p.id, 10));
+      const newId = (Math.max(...numericIds) + 1).toString();
       setPlayers([
         ...players,
         {
@@ -73,7 +81,7 @@ const GameSetup: React.FC = () => {
     }
   };
 
-  const removePlayer = (id: number) => {
+  const removePlayer = (id: string) => {
     if (players.length > MIN_PLAYERS) {
       setPlayers(players.filter(player => player.id !== id));
     }
@@ -83,7 +91,7 @@ const GameSetup: React.FC = () => {
     setGameType(type);
   };
 
-  const handleColorChange = (id: number, color: string) => {
+  const handleColorChange = (id: string, color: string) => {
     setPlayers(
       players.map(player => (player.id === id ? { ...player, color } : player))
     );
@@ -94,26 +102,11 @@ const GameSetup: React.FC = () => {
     
     if (!isFormValid) return;
     
-    // Calcularea numărului de runde în funcție de tipul de joc
-    let totalRounds;
-    switch (gameType) {
-      case GameType.SHORT:
-        totalRounds = 8; // 8 runde
-        break;
-      case GameType.MEDIUM:
-        totalRounds = 2 * players.length + 7; // Variabil în funcție de numărul de jucători
-        break;
-      case GameType.LONG:
-        totalRounds = 3 * players.length + 12; // Variabil în funcție de numărul de jucători
-        break;
-    }
-
-    setupGame(
-      dispatch,
-      players.map(p => ({ ...p, name: p.name.trim() })),
-      gameType,
-      totalRounds
-    );
+    // Get player names for the game
+    const playerNames = players.map(p => p.name.trim());
+    
+    // Start the game using the context function
+    startGame(playerNames, gameType);
   };
 
   return (
