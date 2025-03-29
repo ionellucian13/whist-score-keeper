@@ -29,10 +29,17 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
       document.body.classList.toggle('dark-theme', savedTheme === 'true');
     } else {
       // Altfel, folosim preferința sistemului dacă este disponibilă
-      const prefersDark = 
-        typeof window.matchMedia === 'function' 
-          ? window.matchMedia('(prefers-color-scheme: dark)').matches
-          : false;
+      let prefersDark = false;
+      try {
+        // Verificăm dacă funcția există și dacă returnează un rezultat valid
+        if (typeof window.matchMedia === 'function') {
+          const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+          prefersDark = !!mediaQuery && mediaQuery.matches === true;
+        }
+      } catch (error) {
+        console.error('Error checking dark mode preference:', error);
+      }
+      
       setIsDarkMode(prefersDark);
       document.body.classList.toggle('dark-theme', prefersDark);
     }
