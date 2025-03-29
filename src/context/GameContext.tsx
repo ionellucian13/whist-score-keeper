@@ -36,6 +36,7 @@ interface GameContextType {
   getPlayerCumulativeScore: (playerId: string, upToRound: number) => number;
   restartGameWithSamePlayers: () => void;
   finishRound: (results: Record<string, number>) => void;
+  setGamePhase: (phase: GamePhase) => void;
 }
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -432,6 +433,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const changeGamePhase = (phase: GamePhase) => {
+    setGamePhase(phase);
+  };
+
   const value = {
     game,
     gamePhase,
@@ -454,7 +459,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     getRoundByNumber,
     getPlayerCumulativeScore: getPlayerCumulativeScoreFunc,
     restartGameWithSamePlayers,
-    finishRound
+    finishRound,
+    setGamePhase: changeGamePhase
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
