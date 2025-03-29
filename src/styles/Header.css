@@ -1,0 +1,356 @@
+.app-header {
+  width: 100%;
+  padding: var(--spacing-4) var(--spacing-4);
+  background-color: var(--app-surface);
+  box-shadow: var(--app-elevation-2);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-30);
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.app-header.scrolled {
+  padding: var(--spacing-2) var(--spacing-4);
+  box-shadow: var(--app-elevation-3);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 1.25rem;
+  margin-right: var(--spacing-2);
+}
+
+.logo-icon span {
+  position: absolute;
+  font-size: 1rem;
+  transform-origin: center;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  line-height: 1;
+}
+
+.icon-spades {
+  color: var(--suit-spades);
+  transform: translate(-5px, -5px) rotate(-5deg);
+}
+
+.icon-hearts {
+  color: var(--suit-hearts);
+  transform: translate(5px, -5px) rotate(5deg);
+}
+
+.icon-diamonds {
+  color: var(--suit-diamonds);
+  transform: translate(5px, 5px) rotate(-5deg);
+}
+
+.icon-clubs {
+  color: var(--suit-clubs);
+  transform: translate(-5px, 5px) rotate(5deg);
+}
+
+.logo-container:hover .icon-spades {
+  transform: translate(-7px, -7px) rotate(-10deg);
+}
+
+.logo-container:hover .icon-hearts {
+  transform: translate(7px, -7px) rotate(10deg);
+}
+
+.logo-container:hover .icon-diamonds {
+  transform: translate(7px, 7px) rotate(-10deg);
+}
+
+.logo-container:hover .icon-clubs {
+  transform: translate(-7px, 7px) rotate(10deg);
+}
+
+.app-title {
+  font-family: var(--font-family-headings);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-2xl);
+  color: var(--app-text-primary);
+  margin: 0;
+  background: linear-gradient(
+    45deg,
+    var(--primary-color),
+    var(--primary-hover)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--app-text-primary);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  background-color: var(--app-surface-hover);
+}
+
+.theme-toggle:hover {
+  background-color: var(--app-surface-active);
+  transform: rotate(10deg);
+}
+
+.game-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-3) 0;
+  background-color: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+  margin-bottom: var(--spacing-4);
+}
+
+.game-type-badge {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--app-text-secondary);
+  margin-bottom: var(--spacing-2);
+}
+
+.game-progress {
+  width: 100%;
+  max-width: 300px;
+  height: 6px;
+  background-color: var(--app-surface-hover);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--spacing-2);
+  position: relative;
+}
+
+.game-progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--primary-color),
+    var(--primary-hover)
+  );
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.game-phase-badge {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--app-text-primary);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  background-color: var(--primary-surface);
+  color: var(--primary-color);
+}
+
+.game-phase-badge.prediction {
+  background-color: var(--info-surface);
+  color: var(--info-color);
+}
+
+.game-phase-badge.play {
+  background-color: var(--success-surface);
+  color: var(--success-color);
+}
+
+.game-phase-badge.complete {
+  background-color: var(--primary-surface);
+  color: var(--primary-color);
+}
+
+.round-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+}
+
+.current-round {
+  font-weight: var(--font-weight-bold);
+  color: var(--app-text-primary);
+}
+
+.total-rounds {
+  color: var(--app-text-secondary);
+}
+
+/* Reset Confirmation Modal */
+.reset-confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-50);
+}
+
+.reset-confirm-content {
+  background-color: var(--app-surface);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-lg);
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  box-shadow: var(--app-elevation-4);
+}
+
+.reset-confirm-content h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-4);
+  color: var(--app-text-primary);
+}
+
+.reset-confirm-content p {
+  margin-bottom: var(--spacing-6);
+  color: var(--app-text-secondary);
+}
+
+.reset-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-4);
+}
+
+.cancel-button {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  background-color: var(--app-surface-hover);
+  color: var(--app-text-primary);
+  border: 1px solid var(--app-border);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+  background-color: var(--app-surface-active);
+}
+
+.confirm-button {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  background-color: var(--error-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+}
+
+.confirm-button:hover {
+  background-color: var(--error-hover);
+}
+
+/* Rules Modal */
+.rules-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-50);
+}
+
+.rules-modal-content {
+  background-color: var(--app-surface);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-lg);
+  max-width: 90%;
+  width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--app-elevation-4);
+}
+
+.rules-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-4);
+}
+
+.rules-modal-header h3 {
+  margin: 0;
+  color: var(--app-text-primary);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--app-text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-xl);
+  line-height: 1;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal:hover {
+  background-color: var(--app-surface-hover);
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+  .app-header {
+    padding: var(--spacing-3) var(--spacing-3);
+  }
+
+  .app-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .logo-icon span {
+    font-size: 0.75rem;
+  }
+
+  .header-controls {
+    gap: var(--spacing-2);
+  }
+
+  .game-info-container {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+}

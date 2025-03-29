@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useGameContext } from '../context/GameContext';
+import { useGameContext } from '../contexts/GameContext';
 import { GamePhase, GameType } from '../models/types';
 import RulesModal from './RulesModal';
 import './Header.css';
+import { resetGame } from '../utils/gameUtils';
 
 interface HeaderProps {
   onShowRules: () => void;
@@ -10,38 +11,33 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
-  const { game, gamePhase, setGamePhase, resetGame } = useGameContext();
+  const { gameState, dispatch } = useGameContext();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [showPhaseSelector, setShowPhaseSelector] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   
   // Verificăm preferințele utilizatorului pentru tema întunecată
   useEffect(() => {
-    // Verificăm dacă există o preferință salvată în localStorage
-    const savedTheme = localStorage.getItem('darkMode');
-    
-    if (savedTheme) {
-      // Dacă există o preferință salvată, o aplicăm
-      setIsDarkMode(savedTheme === 'true');
-      document.body.classList.toggle('dark-theme', savedTheme === 'true');
-    } else {
-      // Altfel, folosim preferința sistemului dacă este disponibilă
-      let prefersDark = false;
-      try {
-        // Verificăm dacă funcția există și dacă returnează un rezultat valid
-        if (typeof window.matchMedia === 'function') {
-          const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-          prefersDark = !!mediaQuery && mediaQuery.matches === true;
-        }
-      } catch (error) {
-        console.error('Error checking dark mode preference:', error);
+    let prefersDark = false;
+    try {
+      if (typeof window.matchMedia === 'function') {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        prefersDark = !!mediaQuery && mediaQuery.matches === true;
       }
-      
-      setIsDarkMode(prefersDark);
-      document.body.classList.toggle('dark-theme', prefersDark);
+    } catch (error) {
+      console.error('Error checking dark mode preference:', error);
+    }
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+      setIsDark(true);
+      document.body.classList.add("dark-theme");
+    } else {
+      setIsDark(false);
+      document.body.classList.remove("dark-theme");
     }
     
     // Adăugăm un ascultător pentru a detecta scrollul și a aplica o clasă
@@ -55,21 +51,10 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
     };
   }, []);
   
-  const handleResetClick = () => {
-    if (onConfirm) {
-      onConfirm('Ești sigur că vrei să începi un joc nou? Toate datele curente vor fi pierdute.', resetGame);
-    } else {
-      setShowResetConfirm(true);
+  const handleReset = () => {
+    if (window.confirm("Ești sigur că vrei să începi un joc nou?")) {
+      resetGame(gameState, dispatch);
     }
-  };
-  
-  const confirmReset = () => {
-    resetGame();
-    setShowResetConfirm(false);
-  };
-  
-  const cancelReset = () => {
-    setShowResetConfirm(false);
   };
   
   const openRulesModal = () => {
@@ -87,11 +72,15 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   };
   
   // Toggle tema între light și dark
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    document.body.classList.toggle('dark-theme', newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    if (!isDark) {
+      document.body.classList.add("dark-theme");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-theme");
+      localStorage.setItem("theme", "light");
+    }
   };
   
   // Toggle dropdown pentru acțiuni
@@ -128,21 +117,20 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   
   // Schimbă faza jocului
   const changeGamePhase = (phase: GamePhase) => {
-    setGamePhase(phase);
-    setShowPhaseSelector(false);
+    // Implement the logic to change the game phase
   };
   
   // Determină textul pentru tipul de joc
   const getGameTypeText = () => {
-    if (!game?.gameType) return '';
+    if (!gameState?.gameType) return '';
     
-    switch (game.gameType) {
+    switch (gameState.gameType) {
       case GameType.SHORT:
         return 'Joc Scurt (8 runde)';
       case GameType.MEDIUM:
-        return `Joc Mediu (${2 * game.players.length + 7} runde)`;
+        return `Joc Mediu (${2 * gameState.players.length + 7} runde)`;
       case GameType.LONG:
-        return `Joc Lung (${3 * game.players.length + 12} runde)`;
+        return `Joc Lung (${3 * gameState.players.length + 12} runde)`;
       default:
         return '';
     }
@@ -150,13 +138,13 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   
   // Calculează progresul jocului
   const getGameProgress = (): number => {
-    if (!game) return 0;
-    return Math.min(100, Math.round((game.currentRound / game.totalRounds) * 100));
+    if (!gameState) return 0;
+    return Math.min(100, Math.round((gameState.currentRound / gameState.totalRounds) * 100));
   };
   
   // Obține numele fazei curente pentru afișare
   const getCurrentPhaseName = () => {
-    switch (gamePhase) {
+    switch (gameState?.gamePhase) {
       case GamePhase.PREDICTION:
         return 'Predicții';
       case GamePhase.TRICKS:
@@ -175,7 +163,7 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
     onConfirm(
       'Ești sigur că vrei să resetezi jocul? Toate datele vor fi pierdute.',
       () => {
-        resetGame();
+        resetGame(gameState, dispatch);
         setShowDropdown(false);
       }
     );
@@ -183,91 +171,60 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
   
   return (
     <header className={`app-header ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="header-content">
-        <h1 className="logo">
-          <span className="card-icon-wrapper">
-            <span className="card-icon">
-              <span className="spade">♠</span>
-              <span className="heart">♥</span>
-              <span className="club">♣</span>
-              <span className="diamond">♦</span>
-            </span>
-          </span>
-          Whist Românesc
-        </h1>
-        
-        {game && gamePhase !== GamePhase.SETUP && (
-          <div className="game-info">
-            <div className="game-type-badge">
-              {getGameTypeText()}
-            </div>
-            <div className="round-info">
-              {gamePhase !== GamePhase.COMPLETE ? (
-                <>
-                  <div className="round-counter">
-                    <span className="round-number">{game.currentRound}</span>
-                    <span className="round-separator">/</span>
-                    <span className="total-rounds">{game.totalRounds}</span>
-                  </div>
-                  <div className="round-progress-container">
-                    <div 
-                      className="round-progress"
-                      aria-label={`Progres joc: ${getGameProgress()}%`}
-                      role="progressbar"
-                      aria-valuenow={getGameProgress()}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    >
-                      <div 
-                        className="round-progress-bar" 
-                        style={{ width: `${getGameProgress()}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="phase-badge" data-phase={gamePhase.toLowerCase()}>
-                    {getCurrentPhaseName()}
-                  </div>
-                </>
-              ) : (
-                <div className="phase-badge complete">Joc Finalizat</div>
-              )}
-            </div>
+      <div className="header-container">
+        <div className="logo-container">
+          <div className="logo-icon">
+            <span className="icon-spades">♠</span>
+            <span className="icon-hearts">♥</span>
+            <span className="icon-diamonds">♦</span>
+            <span className="icon-clubs">♣</span>
           </div>
-        )}
-      </div>
-      
-      <div className="header-actions">
-        <button 
-          onClick={toggleDarkMode} 
-          className="theme-toggle"
-          aria-label={isDarkMode ? 'Comută la tema luminoasă' : 'Comută la tema întunecată'}
-        >
-          {isDarkMode ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-            </svg>
-          )}
-        </button>
-        
-        <button onClick={openRulesModal} className="rules-button">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-          </svg>
-          Reguli
-        </button>
-        
-        {gamePhase !== GamePhase.SETUP && (
-          <button onClick={handleResetGame} className="reset-button">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-            </svg>
-            Joc Nou
+          <h1 className="app-title">Whist Românesc</h1>
+        </div>
+
+        <div className="header-controls">
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={handleReset}
+            title="Joc nou"
+          >
+            Joc nou
           </button>
-        )}
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            title={isDark ? "Comută la tema deschisă" : "Comută la tema întunecată"}
+          >
+            {isDark ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path 
+                  d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+                <path 
+                  d="M12 2V4M12 20V22M4.93 4.93L6.34 6.34M17.66 17.66L19.07 19.07M2 12H4M20 12H22M4.93 19.07L6.34 17.66M17.66 6.34L19.07 4.93" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path 
+                  d="M21 12.79C20.8427 14.4922 20.2039 16.1144 19.1582 17.4668C18.1126 18.8192 16.7035 19.8458 15.0957 20.4265C13.4879 21.0073 11.748 21.1181 10.0795 20.7461C8.41104 20.3741 6.88302 19.5345 5.67425 18.3258C4.46548 17.117 3.62596 15.589 3.25401 13.9205C2.88205 12.252 2.99274 10.5121 3.57355 8.9043C4.15435 7.29651 5.18083 5.88737 6.53324 4.84175C7.88564 3.79614 9.5078 3.15731 11.21 3C10.2134 4.34827 9.73384 6.00945 9.85853 7.68141C9.98322 9.35338 10.7039 10.9251 11.8894 12.1106C13.0749 13.2961 14.6466 14.0168 16.3186 14.1415C17.9906 14.2662 19.6517 13.7866 21 12.79Z" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
       
       {showResetConfirm && (
@@ -281,10 +238,10 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
             </div>
             <p>Ești sigur că vrei să începi un joc nou? Toate datele curente vor fi pierdute.</p>
             <div className="reset-actions">
-              <button onClick={cancelReset} className="cancel-button">
+              <button onClick={() => setShowResetConfirm(false)} className="cancel-button">
                 Anulează
               </button>
-              <button onClick={confirmReset} className="confirm-button">
+              <button onClick={handleResetGame} className="confirm-button">
                 Resetează
               </button>
             </div>
