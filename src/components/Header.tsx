@@ -28,8 +28,11 @@ const Header: React.FC<HeaderProps> = ({ onShowRules, onConfirm }) => {
       setIsDarkMode(savedTheme === 'true');
       document.body.classList.toggle('dark-theme', savedTheme === 'true');
     } else {
-      // Altfel, folosim preferința sistemului
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // Altfel, folosim preferința sistemului dacă este disponibilă
+      const prefersDark = 
+        typeof window.matchMedia === 'function' 
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false;
       setIsDarkMode(prefersDark);
       document.body.classList.toggle('dark-theme', prefersDark);
     }
