@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../context/GameContext';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import { GameType } from '../models/types';
 
 interface PlayerRanking {
   id: string;
@@ -11,11 +12,28 @@ interface PlayerRanking {
   rank: number;
 }
 
+interface GameTypeOption {
+  id: GameType;
+  name: string;
+  description: string;
+}
+
 const GameComplete: React.FC = () => {
-  const { game, resetGame } = useGameContext();
+  const { game, resetGame, startGame } = useGameContext();
   const [rankings, setRankings] = useState<PlayerRanking[]>([]);
   const [showConfetti, setShowConfetti] = useState(true);
+  const [showGameTypeSelector, setShowGameTypeSelector] = useState(false);
   const { width, height } = useWindowSize();
+  
+  // Opțiunile pentru tipurile de joc
+  const gameTypeOptions: GameTypeOption[] = [
+    { id: GameType.SHORT, name: 'Scurt', description: 'Aproximativ 30 minute' },
+    { id: GameType.MEDIUM, name: 'Mediu', description: 'Aproximativ 1 oră' },
+    { id: GameType.LONG, name: 'Lung', description: 'Aproximativ 1.5 ore' }
+  ];
+  
+  // Tipul de joc selectat
+  const [selectedGameType, setSelectedGameType] = useState<GameType>(GameType.MEDIUM);
   
   useEffect(() => {
     if (game) {
@@ -64,7 +82,19 @@ const GameComplete: React.FC = () => {
     }
   }, [game]);
   
-  const handlePlayAgain = () => {
+  const handleNewGameSamePlayers = () => {
+    setShowGameTypeSelector(true);
+  };
+  
+  const handleStartNewGameSamePlayers = () => {
+    if (game) {
+      // Extrage numele jucătorilor și începe un joc nou
+      const playerNames = game.players.map(player => player.name);
+      startGame(playerNames, selectedGameType);
+    }
+  };
+  
+  const handleNewGameDifferentPlayers = () => {
     resetGame();
   };
   
@@ -217,12 +247,66 @@ const GameComplete: React.FC = () => {
       </div>
       
       <div className="action-buttons space-y-3">
-        <button
-          onClick={handlePlayAgain}
-          className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
-        >
-          Joc Nou
-        </button>
+        {showGameTypeSelector ? (
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
+            <h3 className="text-lg font-medium mb-3">Alege tipul de joc</h3>
+            <div className="space-y-2 mb-4">
+              {gameTypeOptions.map(option => (
+                <div 
+                  key={option.id}
+                  className={`border rounded-md p-3 cursor-pointer transition-colors ${
+                    selectedGameType === option.id 
+                      ? 'border-indigo-500 bg-indigo-50' 
+                      : 'border-gray-200 hover:border-indigo-300'
+                  }`}
+                  onClick={() => setSelectedGameType(option.id)}
+                >
+                  <div className="flex items-center">
+                    <div className={`w-4 h-4 rounded-full border mr-2 ${
+                      selectedGameType === option.id 
+                        ? 'border-indigo-500 bg-indigo-500' 
+                        : 'border-gray-400'
+                    }`}></div>
+                    <div>
+                      <div className="font-medium">{option.name}</div>
+                      <div className="text-xs text-gray-500">{option.description}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={handleStartNewGameSamePlayers}
+                className="flex-1 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              >
+                Începe Jocul
+              </button>
+              <button
+                onClick={() => setShowGameTypeSelector(false)}
+                className="py-2 px-4 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Înapoi
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <button
+              onClick={handleNewGameSamePlayers}
+              className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
+            >
+              Joc Nou cu Aceiași Jucători
+            </button>
+            
+            <button
+              onClick={handleNewGameDifferentPlayers}
+              className="w-full p-3 bg-white border border-indigo-600 text-indigo-600 rounded-md hover:bg-indigo-50 transition-colors font-medium"
+            >
+              Joc Nou cu Jucători Diferiți
+            </button>
+          </>
+        )}
         
         <button
           onClick={handleShare}
