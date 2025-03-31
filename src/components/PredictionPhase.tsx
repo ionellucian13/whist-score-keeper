@@ -13,6 +13,7 @@ const PredictionPhase: React.FC = () => {
   const [predictions, setPredictions] = useState<Record<string, number>>({});
   const [error, setError] = useState<string | null>(null);
   const [currentBettingPlayerIndex, setCurrentBettingPlayerIndex] = useState<number>(0);
+  const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   
   // Ordine pentru a plasa pariurile
   const [bettingOrder, setBettingOrder] = useState<Player[]>([]);
@@ -22,6 +23,7 @@ const PredictionPhase: React.FC = () => {
       // Reset la începutul rundei
       setPredictions({});
       setError(null);
+      setEditingPlayerId(null);
       
       // Determinăm dealer-ul (ultimul jucător din listă)
       const dealerIndex = (currentRound.dealerIndex);
@@ -50,10 +52,20 @@ const PredictionPhase: React.FC = () => {
     setPredictions(updatedPredictions);
     updatePrediction(playerId, prediction);
     
-    // Trecem la următorul jucător
+    // Dacă suntem în modul de editare, revenim la modul normal
+    if (editingPlayerId === playerId) {
+      setEditingPlayerId(null);
+      return;
+    }
+    
+    // Trecem la următorul jucător doar dacă nu suntem în modul de editare
     if (currentBettingPlayerIndex < bettingOrder.length - 1) {
       setCurrentBettingPlayerIndex(currentBettingPlayerIndex + 1);
     }
+  };
+
+  const handleEditPrediction = (playerId: string) => {
+    setEditingPlayerId(playerId);
   };
 
   const handleSubmit = () => {
@@ -81,8 +93,13 @@ const PredictionPhase: React.FC = () => {
 
   // Verificăm dacă un jucător poate paria în acest moment (respectăm ordinea)
   const canBet = (playerId: string) => {
-    // Dacă jucătorul a pariat deja, nu mai poate paria din nou
-    if (predictions[playerId] !== undefined) {
+    // Dacă suntem în modul de editare, doar jucătorul editat poate paria
+    if (editingPlayerId) {
+      return editingPlayerId === playerId;
+    }
+
+    // Dacă jucătorul a pariat deja și nu suntem în modul de editare, nu poate paria
+    if (predictions[playerId] !== undefined && !editingPlayerId) {
       return false;
     }
 
@@ -133,9 +150,15 @@ const PredictionPhase: React.FC = () => {
         Dealer: <span className="font-medium">{game.players[currentRound.dealerIndex].name}</span>
       </p>
       
-      {currentPlayer && (
+      {currentPlayer && !editingPlayerId && (
         <div className="mb-4 p-2 bg-yellow-100 rounded border border-yellow-300">
           <p className="font-medium">Este rândul lui {currentPlayer.name} să parieze</p>
+        </div>
+      )}
+      
+      {editingPlayerId && (
+        <div className="mb-4 p-2 bg-blue-100 rounded border border-blue-300">
+          <p className="font-medium">Modifică pariul pentru {game.players.find(p => p.id === editingPlayerId)?.name}</p>
         </div>
       )}
       
@@ -159,11 +182,24 @@ const PredictionPhase: React.FC = () => {
                 )}
               </div>
               
-              {predictions[player.id] !== undefined && (
-                <div className="prediction-badge px-2 py-1 bg-green-100 text-green-800 rounded">
-                  Pariu: {predictions[player.id]}
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                {predictions[player.id] !== undefined && (
+                  <div className="prediction-badge px-2 py-1 bg-green-100 text-green-800 rounded">
+                    Pariu: {predictions[player.id]}
+                  </div>
+                )}
+                {predictions[player.id] !== undefined && !editingPlayerId && (
+                  <button
+                    onClick={() => handleEditPrediction(player.id)}
+                    className="p-1 text-blue-600 hover:text-blue-800 transition-colors"
+                    title="Modifică pariul"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
             
             {canBet(player.id) && (
@@ -171,7 +207,11 @@ const PredictionPhase: React.FC = () => {
                 {getPossibleBets(player.id).map((betValue) => (
                   <button
                     key={betValue}
-                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className={`px-3 py-1 rounded transition-colors ${
+                      predictions[player.id] === betValue
+                        ? 'bg-green-500 text-white hover:bg-green-600'
+                        : 'bg-blue-500 text-white hover:bg-blue-600'
+                    }`}
                     onClick={() => handlePredictionSelect(player.id, betValue)}
                   >
                     {betValue}
@@ -191,9 +231,9 @@ const PredictionPhase: React.FC = () => {
       
       <div className="flex justify-end">
         <button
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleSubmit}
-          disabled={Object.keys(predictions).length !== game.players.length}
+          disabled={Object.keys(predictions).length !== game.players.length || editingPlayerId !== null}
         >
           Continuă cu jocul
         </button>
