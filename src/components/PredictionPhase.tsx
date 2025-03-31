@@ -161,7 +161,7 @@ const PredictionPhase: React.FC = () => {
         {currentPlayer && !editingPlayerId && (
           <div className="mb-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
             <div className="flex items-center">
-              <div className="w-2 h-2 bg-purple-600 rounded-full mr-2 animate-pulse"></div>
+              <div className="w-2 h-2 bg-purple-600 rounded-full mr-2 animate-[pulse_2s_ease-in-out_infinite]"></div>
               <p className="font-medium text-purple-800">Este rândul lui {currentPlayer.name} să parieze</p>
             </div>
           </div>
