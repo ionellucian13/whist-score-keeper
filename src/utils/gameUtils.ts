@@ -198,12 +198,19 @@ export const initializeRound = (game: Game): Round => {
   const cardsPerPlayer = calculateHandsPerPlayer(roundNumber, game.players.length, game.gameType);
   const dealerIndex = getDealerIndex(roundNumber, game.players.length);
   
+  // Initialize empty player cards for each player
+  const playerCards: Record<string, string[]> = {};
+  game.players.forEach(player => {
+    playerCards[player.id] = [];
+  });
+  
   return {
     roundNumber,
     cardsPerPlayer,
     totalTricks: cardsPerPlayer,
     dealerIndex,
     results: [],
+    playerCards
   };
 };
 

@@ -145,7 +145,7 @@ const RecordingPhase: React.FC = () => {
   const isCardPlayable = (card: string) => {
     if (!currentTrickSuit) return true;
     const playerCards = getPlayerCards(getCurrentPlayer().id);
-    return playerCards.some(c => c.split(' ')[0] === currentTrickSuit) 
+    return playerCards.some((c: string) => c.split(' ')[0] === currentTrickSuit) 
       ? card.split(' ')[0] === currentTrickSuit 
       : true;
   };
@@ -207,7 +207,7 @@ const RecordingPhase: React.FC = () => {
               </div>
 
               <div className="cards-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                {getPlayerCards(player.id).map((card, index) => (
+                {getPlayerCards(player.id).map((card: string, index: number) => (
                   <button
                     key={index}
                     className={`card-button p-2 rounded-lg text-center transition-all duration-200 ${

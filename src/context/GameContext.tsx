@@ -34,6 +34,8 @@ interface GameContextType {
   getPlayerById: (id: string) => Player | undefined;
   getRoundByNumber: (roundNumber: number) => Round | undefined;
   getPlayerCumulativeScore: (playerId: string, upToRound: number) => number;
+  updateTrickWinner: (playerId: string) => void;
+  submitTrickWinner: (playerId: string) => Promise<void>;
 }
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -309,6 +311,45 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return getPlayerCumulativeScore(game, playerId, upToRound);
   };
 
+  // Update trick winner
+  const updateTrickWinner = (playerId: string) => {
+    if (!game || !currentRound) return;
+    
+    const currentTricks = currentRoundTricks.get(playerId) || 0;
+    setCurrentRoundTricks(prev => {
+      const newTricks = new Map(prev);
+      newTricks.set(playerId, currentTricks + 1);
+      return newTricks;
+    });
+  };
+
+  // Submit trick winner and update game state
+  const submitTrickWinner = async (playerId: string) => {
+    if (!game || !currentRound) return;
+
+    try {
+      // Update tricks won for the winner
+      updateTrickWinner(playerId);
+
+      // Check if all tricks for this round have been played
+      const totalTricksPlayed = Array.from(currentRoundTricks.values()).reduce((sum, tricks) => sum + tricks, 0);
+      
+      if (totalTricksPlayed === currentRound.cardsPerPlayer) {
+        // Convert tricks map to record
+        const roundTricksWon: Record<string, number> = {};
+        currentRoundTricks.forEach((tricks, playerId) => {
+          roundTricksWon[playerId] = tricks;
+        });
+        
+        // Submit the round results
+        submitRound(roundTricksWon);
+      }
+    } catch (error) {
+      console.error('Failed to submit trick winner:', error);
+      setError('Failed to submit trick winner');
+    }
+  };
+
   const value = {
     game,
     gamePhase,
@@ -329,7 +370,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     submitPredictions,
     getPlayerById,
     getRoundByNumber,
-    getPlayerCumulativeScore: getPlayerCumulativeScoreFunc
+    getPlayerCumulativeScore: getPlayerCumulativeScoreFunc,
+    updateTrickWinner,
+    submitTrickWinner
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

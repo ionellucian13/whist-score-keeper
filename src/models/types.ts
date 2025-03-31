@@ -18,6 +18,7 @@ export interface Round {
   totalTricks: number;
   dealerIndex: number;
   results: PlayerRoundResult[];
+  playerCards: Record<string, string[]>;
 }
 
 export interface Game {
