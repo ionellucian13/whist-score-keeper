@@ -158,7 +158,7 @@ const RecordingPhase: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold">Faza de Înregistrare</h2>
-              <p className="text-sm opacity-90">Runda {currentRound.roundNumber}: Mâna {currentTrickIndex + 1} din {currentRound.cardsPerPlayer}</p>
+              <p className="text-sm opacity-90">Runda {currentRound.roundNumber}: {currentRound.cardsPerPlayer} mâini</p>
             </div>
             <div className="bg-blue-700 px-4 py-2 rounded-full text-sm font-medium">
               Dealer: <span className="font-bold">{game.players[currentRound.dealerIndex].name}</span>
@@ -171,7 +171,7 @@ const RecordingPhase: React.FC = () => {
         {currentPlayerIndex < game.players.length && (
           <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex items-center">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse"></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-[pulse_2s_ease-in-out_infinite]"></div>
               <p className="font-medium text-blue-800">
                 Este rândul lui {getCurrentPlayer().name} să joace
               </p>
