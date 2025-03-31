@@ -215,7 +215,7 @@ const TricksPhase: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mx-auto p-4 bg-white rounded-lg shadow">
+      <div className="container mx-auto p-4 bg-white rounded-lg shadow min-h-[calc(100vh-12rem)] flex flex-col">
         <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
@@ -237,7 +237,7 @@ const TricksPhase: React.FC = () => {
           </div>
         )}
 
-        <div className="players-list mb-4">
+        <div className="players-list mb-4 flex-grow">
           {playerOrder.map(player => {
             const prediction = getPlayerPrediction(player.id);
             const playerTricks = tricks[player.id] || 0;
@@ -284,8 +284,8 @@ const TricksPhase: React.FC = () => {
                       key={value}
                       className={`px-4 py-2 rounded-full transition-all duration-200 ${
                         tricks[player.id] === value
-                          ? 'bg-green-500 text-white hover:bg-green-600 shadow-sm'
-                          : 'bg-blue-500 text-white hover:bg-blue-600 shadow-sm'
+                          ? 'bg-blue-500 text-white hover:bg-blue-600 shadow-sm'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300 shadow-sm'
                       }`}
                       onClick={() => handleTricksSelect(player.id, value)}
                     >
@@ -309,7 +309,7 @@ const TricksPhase: React.FC = () => {
           </div>
         )}
 
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-auto">
           <button
             className="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm font-medium"
             onClick={handleSubmit}
