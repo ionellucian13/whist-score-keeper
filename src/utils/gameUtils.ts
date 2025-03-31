@@ -368,6 +368,7 @@ export const saveRoundAndAdvance = (
     totalTricks: calculateHandsPerPlayer(game.currentRound, game.players.length, game.gameType),
     dealerIndex: getDealerIndex(game.currentRound, game.players.length),
     results: roundResults,
+    playerCards: {} // Inițializăm cu un obiect gol, deoarece aceste cărți nu mai sunt necesare după ce runda este salvată
   };
   
   const isLastRound = game.currentRound === game.totalRounds;

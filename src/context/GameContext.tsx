@@ -190,7 +190,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         cardsPerPlayer: currentRound?.cardsPerPlayer || game.currentRound,
         totalTricks: currentRound?.totalTricks || game.currentRound,
         dealerIndex: currentRound?.dealerIndex || 0,
-        results: roundResults
+        results: roundResults,
+        playerCards: currentRound?.playerCards || {}
       };
       
       const tempGame = {
