@@ -199,111 +199,125 @@ const TricksPhase: React.FC = () => {
   
   // Partea asta cu return se execută doar când știm sigur că game și currentRound nu sunt null
   return (
-    <div className="tricks-phase p-4 bg-white rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-2">
-        Runda {currentRound!.roundNumber}: {currentRound!.cardsPerPlayer} mâini
-      </h2>
-      
-      <div className="mb-4 p-3 bg-blue-50 rounded">
-        <div className="flex justify-between items-center">
-          <p className="text-blue-800">
-            <span className="font-medium">Dealer:</span> {game!.players[currentRound!.dealerIndex].name}
-          </p>
-          <p className="text-blue-800">
-            <span className="font-medium">Mâini rămase:</span> {getRemainingTricks()}
-          </p>
+    <div className="tricks-phase">
+      {/* Banner distinctiv pentru faza de înregistrare pariuri */}
+      <div className="bg-blue-600 text-white p-4 rounded-t-lg shadow-lg mb-4">
+        <div className="container mx-auto">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold">Faza de Înregistrare Pariuri</h2>
+              <p className="text-sm opacity-90">Runda {currentRound.roundNumber}: {currentRound.cardsPerPlayer} mâini</p>
+            </div>
+            <div className="bg-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+              Dealer: <span className="font-bold">{game.players[currentRound.dealerIndex].name}</span>
+            </div>
+          </div>
         </div>
       </div>
-      
-      {bonusMessages.length > 0 && (
-        <div className="bonus-messages mb-4">
-          {bonusMessages.map((message, index) => (
-            <div key={index} className="p-2 mb-2 bg-yellow-100 text-yellow-800 rounded">
-              {message}
+
+      <div className="container mx-auto p-4 bg-white rounded-lg shadow">
+        <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-[pulse_2s_ease-in-out_infinite]"></div>
+              <p className="text-blue-800">
+                <span className="font-medium">Mâini rămase:</span> {getRemainingTricks()}
+              </p>
             </div>
-          ))}
+          </div>
         </div>
-      )}
-      
-      <div className="player-list space-y-4 mb-6">
-        {playerOrder.map(player => {
-          const prediction = getPlayerPrediction(player.id);
-          const playerTricks = tricks[player.id] || 0;
-          
-          return (
-            <div 
-              key={player.id} 
-              className={`player-tricks p-3 border rounded ${isDealer(player.id) ? 'border-red-400' : ''}`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="player-info flex items-center">
-                  <span 
-                    className="inline-block w-3 h-3 rounded-full mr-2" 
-                    style={{ backgroundColor: player.color }}
-                  ></span>
-                  <span className="font-medium">{player.name}</span>
-                  {isDealer(player.id) && (
-                    <span className="ml-2 text-sm text-red-600">(Dealer)</span>
-                  )}
+
+        {bonusMessages.length > 0 && (
+          <div className="bonus-messages mb-4">
+            {bonusMessages.map((message, index) => (
+              <div key={index} className="p-2 mb-2 bg-yellow-100 text-yellow-800 rounded">
+                {message}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="players-list mb-4">
+          {playerOrder.map(player => {
+            const prediction = getPlayerPrediction(player.id);
+            const playerTricks = tricks[player.id] || 0;
+            
+            return (
+              <div 
+                key={player.id} 
+                className={`player-tricks mb-4 p-4 rounded-lg border transition-all duration-200 ${
+                  isDealer(player.id) ? 'border-red-400' : 'border-gray-200'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="player-info flex items-center">
+                    <span 
+                      className="inline-block w-3 h-3 rounded-full mr-2" 
+                      style={{ backgroundColor: player.color }}
+                    ></span>
+                    <span className="font-medium">{player.name}</span>
+                    {isDealer(player.id) && (
+                      <span className="ml-2 text-sm text-red-600">(Dealer)</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <span className="text-sm text-gray-600 mr-2">
+                      Predicție: <span className="font-medium">{prediction}</span>
+                    </span>
+                    
+                    {playerTricks > 0 && 
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        isPredictionCorrect(player.id) 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {isPredictionCorrect(player.id) ? 'Corect ✓' : 'Incorect ✗'}
+                      </span>
+                    }
+                  </div>
                 </div>
                 
-                <div className="flex items-center">
-                  <span className="text-sm text-gray-600 mr-2">
-                    Predicție: <span className="font-medium">{prediction}</span>
-                  </span>
-                  
-                  {playerTricks > 0 && 
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      isPredictionCorrect(player.id) 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {isPredictionCorrect(player.id) ? 'Corect ✓' : 'Incorect ✗'}
-                    </span>
-                  }
+                <div className="tricks-buttons flex flex-wrap gap-2">
+                  {getPossibleTricksValues(player.id).map((value) => (
+                    <button
+                      key={value}
+                      className={`px-4 py-2 rounded-full transition-all duration-200 ${
+                        tricks[player.id] === value
+                          ? 'bg-green-500 text-white hover:bg-green-600 shadow-sm'
+                          : 'bg-blue-500 text-white hover:bg-blue-600 shadow-sm'
+                      }`}
+                      onClick={() => handleTricksSelect(player.id, value)}
+                    >
+                      {value}
+                    </button>
+                  ))}
                 </div>
               </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {getPossibleTricksValues(player.id).map((value) => (
-                  <button
-                    key={value}
-                    className={`px-3 py-1 rounded border ${
-                      tricks[player.id] === value 
-                        ? 'bg-blue-500 text-white border-blue-600' 
-                        : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
-                    }`}
-                    onClick={() => handleTricksSelect(player.id, value)}
-                  >
-                    {value}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      {error && (
-        <div className="error-message p-2 mb-4 bg-red-100 text-red-800 rounded">
-          {error}
+            );
+          })}
         </div>
-      )}
-      
-      <div className="flex justify-between">
-        <button
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-          onClick={undoLastAction}
-        >
-          Înapoi la predicții
-        </button>
-        <button
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          onClick={handleSubmit}
-          disabled={!allTricksRecorded()}
-        >
-          Finalizează runda
-        </button>
+
+        {error && (
+          <div className="error-message p-3 mb-4 bg-red-50 text-red-800 rounded-lg border border-red-200">
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              {error}
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-end">
+          <button
+            className="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm font-medium"
+            onClick={handleSubmit}
+            disabled={!allTricksRecorded()}
+          >
+            Finalizează runda
+          </button>
+        </div>
       </div>
     </div>
   );
